@@ -50,7 +50,8 @@ public class RCCAdapter extends BaseAdapter {
         textViewName.setText(store.getName());
 
         TextView textViewAddress = view.findViewById(R.id.text_view_store_address);
-        textViewAddress.setText(store.getAddress());
+        String addressDistance = store.getAddress() + " - " + (int) store.getDistance() + "m";
+        textViewAddress.setText(addressDistance);
 
         TextView textViewIsOpen = view.findViewById(R.id.text_view_is_open);
         if(store.isOpen()) {

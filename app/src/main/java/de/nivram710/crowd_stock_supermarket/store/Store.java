@@ -20,6 +20,7 @@ public class Store {
         this.id = id;
         this.name = name;
         this.address = address;
+        this.distance = distance;
         this.products = products;
         this.isOpen = isOpen;
     }
