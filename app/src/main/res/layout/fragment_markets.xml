@@ -28,9 +28,12 @@
     <ListView
         android:id="@+id/store_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="15dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="15dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:layout_weight=".5"/>
+        android:layout_weight=".5" />
 
 </LinearLayout>

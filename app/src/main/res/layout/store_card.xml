@@ -17,6 +17,7 @@
             android:id="@+id/text_view_store_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingStart="10dp"
             android:text="Supermarktname"
             android:background="@drawable/titlebackground"
             android:textSize="24sp"
@@ -54,7 +55,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="15dp">
 
             <TextView
                 android:id="@+id/color_indicator_milk"
