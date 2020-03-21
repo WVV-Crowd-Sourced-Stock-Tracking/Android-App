@@ -61,8 +61,10 @@ public class RCCAdapter extends BaseAdapter {
             textViewIsOpen.setTextColor(context.getColor(R.color.holoRedDark));
         }
 
+        TextView indicator_milk = view.findViewById(R.id.color_indicator_milk);
+        TextView indicator_bread = view.findViewById(R.id.color_indicator_bread);
+        TextView indicator_toilet_paper = view.findViewById(R.id.color_indicator_toilet_paper);
         if(store.getProducts().length >= 3) {
-            TextView indicator_milk = view.findViewById(R.id.color_indicator_milk);
             switch (store.getProducts()[0].getAvailability()) {
                 case 0:
                     indicator_milk.setBackground(context.getDrawable(R.drawable.circle_red));
@@ -74,7 +76,6 @@ public class RCCAdapter extends BaseAdapter {
                     indicator_milk.setBackground(context.getDrawable(R.drawable.circle_gray));
             }
 
-            TextView indicator_bread = view.findViewById(R.id.color_indicator_bread);
             switch (store.getProducts()[1].getAvailability()) {
                 case 0:
                     indicator_bread.setBackground(context.getDrawable(R.drawable.circle_red));
@@ -86,7 +87,6 @@ public class RCCAdapter extends BaseAdapter {
                     indicator_bread.setBackground(context.getDrawable(R.drawable.circle_gray));
             }
 
-            TextView indicator_toilet_paper = view.findViewById(R.id.color_indicator_toilet_paper);
             switch (store.getProducts()[1].getAvailability()) {
                 case 0:
                     indicator_toilet_paper.setBackground(context.getDrawable(R.drawable.circle_red));
@@ -97,6 +97,10 @@ public class RCCAdapter extends BaseAdapter {
                 default:
                     indicator_toilet_paper.setBackground(context.getDrawable(R.drawable.circle_gray));
             }
+        } else {
+            indicator_milk.setBackground(context.getDrawable(R.drawable.circle_gray));
+            indicator_bread.setBackground(context.getDrawable(R.drawable.circle_gray));
+            indicator_toilet_paper.setBackground(context.getDrawable(R.drawable.circle_gray));
         }
         return view;
     }
