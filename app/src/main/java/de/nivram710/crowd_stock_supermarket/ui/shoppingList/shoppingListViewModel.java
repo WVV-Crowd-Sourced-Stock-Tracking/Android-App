@@ -1,19 +1,19 @@
-package de.nivram710.crowd_stock_supermarket.ui.notifications;
+package de.nivram710.crowd_stock_supermarket.ui.shoppingList;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class NotificationsViewModel extends ViewModel {
+public class shoppingListViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public NotificationsViewModel() {
+    public shoppingListViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is notifications fragment");
     }
 
-    public LiveData<String> getText() {
+    LiveData<String> getText() {
         return mText;
     }
 }

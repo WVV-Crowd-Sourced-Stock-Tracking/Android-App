@@ -3,23 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_map">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="de.nivram710.crowd_stock_supermarket.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/navigation_map"
+        android:name="de.nivram710.crowd_stock_supermarket.ui.map.MapFragment"
+        android:label="@string/navbar_map"
+        tools:layout="@layout/fragment_map" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="de.nivram710.crowd_stock_supermarket.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_markets"
+        android:name="de.nivram710.crowd_stock_supermarket.ui.markets.marketsFragment"
+        android:label="@string/navbar_markets"
+        tools:layout="@layout/fragment_markets" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="de.nivram710.crowd_stock_supermarket.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_shopping_list"
+        android:name="de.nivram710.crowd_stock_supermarket.ui.shoppingList.shoppingListFragment"
+        android:label="@string/navbar_shopping_list"
+        tools:layout="@layout/fragment_shopping_list" />
 </navigation>

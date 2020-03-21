@@ -1,4 +1,4 @@
-package de.nivram710.crowd_stock_supermarket.ui.dashboard;
+package de.nivram710.crowd_stock_supermarket.ui.markets;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,17 +14,17 @@ import androidx.lifecycle.ViewModelProviders;
 
 import de.nivram710.crowd_stock_supermarket.R;
 
-public class DashboardFragment extends Fragment {
+public class marketsFragment extends Fragment {
 
-    private DashboardViewModel dashboardViewModel;
+    private marketsViewModel marketsViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        dashboardViewModel =
-                ViewModelProviders.of(this).get(DashboardViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        marketsViewModel =
+                ViewModelProviders.of(this).get(marketsViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_markets, container, false);
         final TextView textView = root.findViewById(R.id.text_dashboard);
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        marketsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

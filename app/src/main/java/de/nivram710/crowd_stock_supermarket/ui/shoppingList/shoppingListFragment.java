@@ -1,4 +1,4 @@
-package de.nivram710.crowd_stock_supermarket.ui.notifications;
+package de.nivram710.crowd_stock_supermarket.ui.shoppingList;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,17 +14,17 @@ import androidx.lifecycle.ViewModelProviders;
 
 import de.nivram710.crowd_stock_supermarket.R;
 
-public class NotificationsFragment extends Fragment {
+public class shoppingListFragment extends Fragment {
 
-    private NotificationsViewModel notificationsViewModel;
+    private shoppingListViewModel shoppingListViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        notificationsViewModel =
-                ViewModelProviders.of(this).get(NotificationsViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_notifications, container, false);
+        shoppingListViewModel =
+                ViewModelProviders.of(this).get(shoppingListViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_shopping_list, container, false);
         final TextView textView = root.findViewById(R.id.text_notifications);
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        shoppingListViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

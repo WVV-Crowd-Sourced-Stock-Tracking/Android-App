@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navbar_map">maps</string>
+    <string name="app_name">crowd-stock-supermarket</string>
+    <string name="navbar_markets">markets</string>
+    <string name="navbar_shopping_list">shopping list</string>
+</resources>
