@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class shoppingListViewModel extends ViewModel {
+public class ShoppingListViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public shoppingListViewModel() {
+    public ShoppingListViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is notifications fragment");
     }

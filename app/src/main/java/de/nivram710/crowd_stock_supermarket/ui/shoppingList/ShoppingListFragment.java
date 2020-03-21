@@ -14,14 +14,14 @@ import androidx.lifecycle.ViewModelProviders;
 
 import de.nivram710.crowd_stock_supermarket.R;
 
-public class shoppingListFragment extends Fragment {
+public class ShoppingListFragment extends Fragment {
 
-    private shoppingListViewModel shoppingListViewModel;
+    private ShoppingListViewModel shoppingListViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         shoppingListViewModel =
-                ViewModelProviders.of(this).get(shoppingListViewModel.class);
+                ViewModelProviders.of(this).get(ShoppingListViewModel.class);
         View root = inflater.inflate(R.layout.fragment_shopping_list, container, false);
         final TextView textView = root.findViewById(R.id.text_notifications);
         shoppingListViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {

@@ -13,13 +13,13 @@
 
     <fragment
         android:id="@+id/navigation_markets"
-        android:name="de.nivram710.crowd_stock_supermarket.ui.markets.marketsFragment"
+        android:name="de.nivram710.crowd_stock_supermarket.ui.markets.MarketsFragment"
         android:label="@string/navbar_markets"
         tools:layout="@layout/fragment_markets" />
 
     <fragment
         android:id="@+id/navigation_shopping_list"
-        android:name="de.nivram710.crowd_stock_supermarket.ui.shoppingList.shoppingListFragment"
+        android:name="de.nivram710.crowd_stock_supermarket.ui.shoppingList.ShoppingListFragment"
         android:label="@string/navbar_shopping_list"
         tools:layout="@layout/fragment_shopping_list" />
 </navigation>
