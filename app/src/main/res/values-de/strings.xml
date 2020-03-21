@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">crowd-stock-supermarket</string>
     <string name="navbar_map">Karte</string>
-    <string name="navbar_markets">Märkte</string>
+    <string name="navbar_markets">Läden</string>
     <string name="navbar_shopping_list">Einkaufsliste</string>
+    <string name="market">Läden</string>
+    <string name="near_you">in Ihrer Umgebung</string>
 </resources>

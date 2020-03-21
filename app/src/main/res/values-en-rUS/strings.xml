@@ -4,4 +4,6 @@
     <string name="app_name">crowd-stock-supermarket</string>
     <string name="navbar_markets">markets</string>
     <string name="navbar_shopping_list">shopping list</string>
+    <string name="market">shops</string>
+    <string name="near_you">close to you</string>
 </resources>

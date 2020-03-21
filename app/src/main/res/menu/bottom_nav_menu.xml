@@ -2,13 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_map"
-        android:icon="@drawable/ic_map_black_24dp"
-        android:title="@string/navbar_map" />
-
-    <item
         android:id="@+id/navigation_markets"
-        android:icon="@drawable/ic_store_mall_directory_black_24dp"
+        android:icon="@drawable/ic_shopping_cart_black_24dp"
         android:title="@string/navbar_markets" />
 
     <item
