@@ -3,13 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_map">
-
-    <fragment
-        android:id="@+id/navigation_map"
-        android:name="de.nivram710.crowd_stock_supermarket.ui.map.MapFragment"
-        android:label="@string/navbar_map"
-        tools:layout="@layout/fragment_map" />
+    app:startDestination="@+id/navigation_markets">
 
     <fragment
         android:id="@+id/navigation_markets"
