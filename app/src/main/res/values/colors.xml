@@ -8,4 +8,7 @@
     <color name="holoGreenLight">#44AF49</color>
     <color name="darkerGray">@android:color/darker_gray</color>
     <color name="darkBlue">#006BAB</color>
+    <color name="black">#000</color>
+    <color name="very_dark_gray">#222121</color>
+    <color name="very_light_gray">#F4F4F4</color>
 </resources>

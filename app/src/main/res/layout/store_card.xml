@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="15dp"
-                android:text="Geöffnet"
+                android:text="@string/store_is_open"
                 android:textColor="@android:color/holo_green_dark"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="10dp"
-                android:text="Milch" />
+                android:text="@string/milk" />
 
             <TextView
                 android:id="@+id/color_indicator_bread"
@@ -85,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="10dp"
-                android:text="Brot" />
+                android:text="@string/bread" />
 
             <TextView
                 android:id="@+id/color_indicator_toilet_paper"
@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="10dp"
-                android:text="Toiletten Papier" />
+                android:text="@string/toilet_paper" />
 
         </LinearLayout>
 

@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="navbar_map">maps</string>
-    <string name="app_name">crowd-stock-supermarket</string>
     <string name="navbar_markets">markets</string>
     <string name="navbar_shopping_list">shopping list</string>
     <string name="market">shops</string>
     <string name="near_you">close to you</string>
     <string name="store_is_open">Open</string>
     <string name="store_is_closed">Closed</string>
+    <string name="address_title">address</string>
+    <string name="is_open_title">open</string>
+    <string name="groceries">groceries</string>
+    <string name="products">products</string>
+    <string name="milk">milk</string>
+    <string name="bread">bread</string>
+    <string name="toilet_paper">toilet paper</string>
+    <string name="product">product</string>
+    <string name="availability">availability</string>
+    <string name="empty">empty</string>
+    <string name="less">less</string>
+    <string name="enough">enough</string>
 </resources>
