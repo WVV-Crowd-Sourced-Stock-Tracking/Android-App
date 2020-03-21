@@ -10,17 +10,18 @@ public class Store {
     private String name;
     private String address;
     private double distance;
+    private double latitude;
+    private double longitude;
     private Product[] products;
     private boolean isOpen;
 
-    private static final String TAG = "Store";
-    
-    public Store(String id, String name, String address, double distance, Product[] products, boolean isOpen) {
-        Log.d(TAG, "Store: called");
+    public Store(String id, String name, String address, double distance, double latitude, double longitude, Product[] products, boolean isOpen) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.distance = distance;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.products = products;
         this.isOpen = isOpen;
     }
@@ -55,6 +56,22 @@ public class Store {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public Product[] getProducts() {

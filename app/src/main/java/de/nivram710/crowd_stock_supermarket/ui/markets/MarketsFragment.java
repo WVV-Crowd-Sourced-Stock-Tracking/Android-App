@@ -25,10 +25,19 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,12 +61,16 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
     private MapView mapView;
     private View mView;
 
+    private boolean mapReady = false;
+
     private LocationManager locationManager;
 
     private MarketsViewModel marketsViewModel;
     private ListView listView;
     private ArrayList<Store> stores = new ArrayList<>();
     private RCCAdapter adapter;
+
+    private Location lastKnownLocation;
 
     private String REQUEST_URL = "http://3.120.206.89";
 
@@ -105,9 +118,11 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
                 String name = object.getString("name");
                 String address = object.getString("vicinity");
                 double distance = object.getDouble("distance");
+                double latitude = object.getDouble("latitude");
+                double longitude = object.getDouble("longitude");
                 boolean isOpen = object.getBoolean("open_now");
 
-                Store store = new Store(id, name, address, distance, new Product[]{}, isOpen);
+                Store store = new Store(id, name, address, distance, latitude, longitude, new Product[]{}, isOpen);
                 Log.d(TAG, "requestStores: store created: " + store.toString());
                 stores.add(store);
             } catch (JSONException e) {
@@ -115,6 +130,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
             }
         }
         adapter.notifyDataSetChanged();
+        if(mapReady) displayStores();
         Log.i(TAG, "requestStores: stores: " + stores);
     }
 
@@ -136,11 +152,34 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         MapsInitializer.initialize(Objects.requireNonNull(getContext()));
 
         mGoogleMap = googleMap;
-        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mGoogleMap.setMyLocationEnabled(true);
+        mGoogleMap.setMapStyle(new MapStyleOptions(getResources().getString(R.string.style_json)));
+        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
+
+        LatLng lastKnownLocationLatLgn = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+        CameraPosition position = new CameraPosition(lastKnownLocationLatLgn, 13f, 0f, 0f);
+        mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
+        displayStores();
+    }
+
+    private void displayStores() {
+
+        for (Store store : stores) {
+            double latitude = store.getLatitude();
+            double longitude = store.getLongitude();
+
+            mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude))
+                    .title(store.getName())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+                    .alpha(.99f));
+
+        }
+
     }
 
     @Override
     public void onLocationChanged(Location location) {
+        lastKnownLocation = location;
         requestStores(location);
         Log.d(TAG, "onLocationChanged: location: " + location.getLatitude() + "; " + location.getLongitude());
     }
