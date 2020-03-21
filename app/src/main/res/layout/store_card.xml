@@ -40,13 +40,13 @@
                 android:text="Musterstraße 133b, Berlin - 500m" />
 
             <TextView
-                android:id="@+id/text_view_closing_time"
+                android:id="@+id/text_view_is_open"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:textColor="@android:color/holo_orange_dark"
-                android:layout_marginEnd="20dp"
-                android:text="Schließt um 19:00 Uhr" />
+                android:layout_marginEnd="15dp"
+                android:text="Geöffnet"
+                android:textColor="@android:color/holo_green_dark" />
         </LinearLayout>
 
         <LinearLayout

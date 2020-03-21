@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
-import androidx.cardview.widget.CardView;
 
 import java.util.ArrayList;
 
@@ -47,8 +46,20 @@ public class RCCAdapter extends BaseAdapter {
 
         Store store = stores.get(position);
 
-        TextView name = view.findViewById(R.id.text_view_store_name);
-        name.setText(store.getName());
+        TextView textViewName = view.findViewById(R.id.text_view_store_name);
+        textViewName.setText(store.getName());
+
+        TextView textViewAddress = view.findViewById(R.id.text_view_store_address);
+        textViewAddress.setText(store.getAddress());
+
+        TextView textViewIsOpen = view.findViewById(R.id.text_view_is_open);
+        if(store.isOpen()) {
+            textViewIsOpen.setText(context.getString(R.string.store_is_open));
+            textViewIsOpen.setTextColor(context.getColor(R.color.holoGreenLight));
+        } else {
+            textViewIsOpen.setText(context.getString(R.string.store_is_closed));
+            textViewIsOpen.setTextColor(context.getColor(R.color.holoRedDark));
+        }
 
         if(store.getProducts().length >= 3) {
             TextView indicator_milk = view.findViewById(R.id.color_indicator_milk);

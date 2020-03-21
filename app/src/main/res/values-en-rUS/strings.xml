@@ -6,4 +6,6 @@
     <string name="navbar_shopping_list">shopping list</string>
     <string name="market">shops</string>
     <string name="near_you">close to you</string>
+    <string name="store_is_open">Open</string>
+    <string name="store_is_closed">Closed</string>
 </resources>

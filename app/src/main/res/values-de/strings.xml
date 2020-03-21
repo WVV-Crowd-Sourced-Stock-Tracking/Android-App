@@ -6,4 +6,6 @@
     <string name="navbar_shopping_list">Einkaufsliste</string>
     <string name="market">Läden</string>
     <string name="near_you">in Ihrer Umgebung</string>
+    <string name="store_is_open">Geöffnet</string>
+    <string name="store_is_closed">Geschlossen</string>
 </resources>
