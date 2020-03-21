@@ -1,7 +1,13 @@
 package de.nivram710.crowd_stock_supermarket.ui.markets;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +19,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -22,41 +30,92 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 import de.nivram710.crowd_stock_supermarket.MainActivity;
 import de.nivram710.crowd_stock_supermarket.R;
+import de.nivram710.crowd_stock_supermarket.connectivity.HTTPGetRequest;
 import de.nivram710.crowd_stock_supermarket.store.Product;
 import de.nivram710.crowd_stock_supermarket.store.Store;
 
-public class MarketsFragment extends Fragment implements OnMapReadyCallback {
+public class MarketsFragment extends Fragment implements OnMapReadyCallback, LocationListener {
+
+    private static final String TAG = "MarketsFragment";
 
     private GoogleMap mGoogleMap;
     private MapView mapView;
     private View mView;
 
+    private LocationManager locationManager;
+
     private MarketsViewModel marketsViewModel;
     private ListView listView;
     private ArrayList<Store> stores = new ArrayList<>();
+    private RCCAdapter adapter;
 
-    Store rewe = new Store(0, "Rewe", new Product[]{new Product(0, "Milch", "", 2), new Product(1, "Brot", "", 3), new Product(3, "Toilettenpapier", "", 0)}, false);
-    Store lidl = new Store(1, "Lidl", new Product[]{new Product(0, "Milch", "", 0), new Product(1, "Brot", "", 0), new Product(3, "Toilettenpapier", "", 0)}, false);
-    Store aldi = new Store(2, "Aldi", new Product[]{new Product(0, "Milch", "", 2), new Product(1, "Brot", "", 2), new Product(3, "Toilettenpapier", "", 3)}, false);
-
+    private String REQUEST_URL = "http://3.120.206.89";
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_markets, container, false);
         listView = mView.findViewById(R.id.store_list_view);
 
-        stores.add(rewe);
-        stores.add(lidl);
-        stores.add(aldi);
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+        }
 
-        RCCAdapter adapter = new RCCAdapter(getContext(), stores);
+        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, (LocationListener) this);
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+
+        adapter = new RCCAdapter(getContext(), stores);
 
         listView.setAdapter(adapter);
         return mView;
+    }
+
+    private void requestStores(Location location) {
+
+        HTTPGetRequest getRequest = new HTTPGetRequest();
+        String result = null;
+        try {
+            result = (String) getRequest.execute(REQUEST_URL + "/markets?latitude=" +  location.getLatitude() +"&longitude=" + location.getLongitude()).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        JSONArray jsonArray = new JSONArray();
+        try {
+            jsonArray = new JSONArray(result);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Log.d(TAG, "requestStores: jsonArray: " + jsonArray);
+        for (int i=0; i<jsonArray.length(); i++) {
+            try {
+                JSONObject object = (JSONObject) jsonArray.get(i);
+                String id = object.getString("id");
+                String name = object.getString("name");
+                String address = object.getString("vicinity");
+                double distance = object.getDouble("distance");
+                boolean isOpen = object.getBoolean("open_now");
+
+                Store store = new Store(id, name, address, distance, new Product[]{}, isOpen);
+                Log.d(TAG, "requestStores: store created: " + store.toString());
+                stores.add(store);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        adapter.notifyDataSetChanged();
+        Log.i(TAG, "requestStores: stores: " + stores);
     }
 
     @Override
@@ -80,4 +139,24 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback {
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        requestStores(location);
+        Log.d(TAG, "onLocationChanged: location: " + location.getLatitude() + "; " + location.getLongitude());
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+        Log.i(TAG, "onStatusChanged: gps status changed");
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+        Log.i(TAG, "onProviderEnabled: GPS Enabled");
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+        Log.i(TAG, "onProviderDisabled: gps disabled");
+    }
 }

@@ -19,7 +19,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-public class MainActivity extends AppCompatActivity implements LocationListener{
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     
@@ -35,31 +35,5 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
-        }
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) this);
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        Log.i(TAG, "onLocationChanged: location: " + location.getLatitude() + "; " + location.getLongitude());
-    }
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-        Log.i(TAG, "onStatusChanged: gps status changed");
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-        Log.i(TAG, "onProviderEnabled: GPS Enabled");
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-        Log.i(TAG, "onProviderDisabled: gps disabled");
     }
 }

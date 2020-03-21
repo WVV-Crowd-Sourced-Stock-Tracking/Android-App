@@ -45,45 +45,48 @@ public class RCCAdapter extends BaseAdapter {
     public View getView(int position, View view, ViewGroup viewGroup) {
         view = View.inflate(context, R.layout.store_card, null);
 
+        Store store = stores.get(position);
+
         TextView name = view.findViewById(R.id.text_view_store_name);
-        name.setText(stores.get(position).getName());
+        name.setText(store.getName());
 
-        TextView indicator_milk = view.findViewById(R.id.color_indicator_milk);
-        switch (stores.get(position).getProducts()[0].getAvailability()) {
-            case 0:
-                indicator_milk.setBackground(context.getDrawable(R.drawable.circle_red));
-            case 1:
-                indicator_milk.setBackground(context.getDrawable(R.drawable.circle_yellow));
-            case 2:
-                indicator_milk.setBackground(context.getDrawable(R.drawable.circle_green));
-            default:
-                indicator_milk.setBackground(context.getDrawable(R.drawable.circle_gray));
+        if(store.getProducts().length >= 3) {
+            TextView indicator_milk = view.findViewById(R.id.color_indicator_milk);
+            switch (store.getProducts()[0].getAvailability()) {
+                case 0:
+                    indicator_milk.setBackground(context.getDrawable(R.drawable.circle_red));
+                case 1:
+                    indicator_milk.setBackground(context.getDrawable(R.drawable.circle_yellow));
+                case 2:
+                    indicator_milk.setBackground(context.getDrawable(R.drawable.circle_green));
+                default:
+                    indicator_milk.setBackground(context.getDrawable(R.drawable.circle_gray));
+            }
+
+            TextView indicator_bread = view.findViewById(R.id.color_indicator_bread);
+            switch (store.getProducts()[1].getAvailability()) {
+                case 0:
+                    indicator_bread.setBackground(context.getDrawable(R.drawable.circle_red));
+                case 1:
+                    indicator_bread.setBackground(context.getDrawable(R.drawable.circle_yellow));
+                case 2:
+                    indicator_bread.setBackground(context.getDrawable(R.drawable.circle_green));
+                default:
+                    indicator_bread.setBackground(context.getDrawable(R.drawable.circle_gray));
+            }
+
+            TextView indicator_toilet_paper = view.findViewById(R.id.color_indicator_toilet_paper);
+            switch (store.getProducts()[1].getAvailability()) {
+                case 0:
+                    indicator_toilet_paper.setBackground(context.getDrawable(R.drawable.circle_red));
+                case 1:
+                    indicator_toilet_paper.setBackground(context.getDrawable(R.drawable.circle_yellow));
+                case 2:
+                    indicator_toilet_paper.setBackground(context.getDrawable(R.drawable.circle_green));
+                default:
+                    indicator_toilet_paper.setBackground(context.getDrawable(R.drawable.circle_gray));
+            }
         }
-
-        TextView indicator_bread = view.findViewById(R.id.color_indicator_bread);
-        switch (stores.get(position).getProducts()[1].getAvailability()) {
-            case 0:
-                indicator_bread.setBackground(context.getDrawable(R.drawable.circle_red));
-            case 1:
-                indicator_bread.setBackground(context.getDrawable(R.drawable.circle_yellow));
-            case 2:
-                indicator_bread.setBackground(context.getDrawable(R.drawable.circle_green));
-            default:
-                indicator_bread.setBackground(context.getDrawable(R.drawable.circle_gray));
-        }
-
-        TextView indicator_toilet_paper = view.findViewById(R.id.color_indicator_toilet_paper);
-        switch (stores.get(position).getProducts()[1].getAvailability()) {
-            case 0:
-                indicator_toilet_paper.setBackground(context.getDrawable(R.drawable.circle_red));
-            case 1:
-                indicator_toilet_paper.setBackground(context.getDrawable(R.drawable.circle_yellow));
-            case 2:
-                indicator_toilet_paper.setBackground(context.getDrawable(R.drawable.circle_green));
-            default:
-                indicator_toilet_paper.setBackground(context.getDrawable(R.drawable.circle_gray));
-        }
-
         return view;
     }
 }
