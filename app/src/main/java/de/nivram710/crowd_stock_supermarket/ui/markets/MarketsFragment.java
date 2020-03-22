@@ -65,12 +65,12 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
     private LocationManager locationManager;
 
+    Location lastKnownLocation;
+
     private MarketsViewModel marketsViewModel;
     private ListView listView;
     private ArrayList<Store> stores = new ArrayList<>();
     private RCCAdapter adapter;
-
-    private Location lastKnownLocation;
 
     private String REQUEST_URL = "http://3.120.206.89";
 
@@ -83,8 +83,8 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         }
 
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        assert locationManager != null;
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, (LocationListener) this);
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
 
         adapter = new RCCAdapter(getContext(), stores);
@@ -98,7 +98,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         HTTPGetRequest getRequest = new HTTPGetRequest();
         String result = null;
         try {
-            result = (String) getRequest.execute(REQUEST_URL + "/markets?latitude=" +  location.getLatitude() +"&longitude=" + location.getLongitude()).get();
+            result = (String) getRequest.execute(REQUEST_URL + "/markets?latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude()).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -111,7 +111,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         }
 
         Log.d(TAG, "requestStores: jsonArray: " + jsonArray);
-        for (int i=0; i<jsonArray.length(); i++) {
+        for (int i = 0; i < jsonArray.length(); i++) {
             try {
                 JSONObject object = (JSONObject) jsonArray.get(i);
                 String id = object.getString("id");
@@ -130,7 +130,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
             }
         }
         adapter.notifyDataSetChanged();
-        if(mapReady) displayStores();
+        if (mapReady) displayStores();
         Log.i(TAG, "requestStores: stores: " + stores);
     }
 
@@ -139,7 +139,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         super.onViewCreated(view, savedInstanceState);
 
         mapView = mView.findViewById(R.id.map);
-        if(mapView != null) {
+        if (mapView != null) {
             mapView.onCreate(null);
             mapView.onResume();
             mapView.getMapAsync(this);
@@ -156,9 +156,8 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         mGoogleMap.setMapStyle(new MapStyleOptions(getResources().getString(R.string.style_json)));
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-        LatLng lastKnownLocationLatLgn = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-        CameraPosition position = new CameraPosition(lastKnownLocationLatLgn, 13f, 0f, 0f);
-        mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
+        mapReady = true;
+
         displayStores();
     }
 
@@ -175,10 +174,18 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
         }
 
+        // update camera
+        if (lastKnownLocation != null) {
+            LatLng lastKnownLocationLatLgn = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+            CameraPosition position = new CameraPosition(lastKnownLocationLatLgn, 13f, 0f, 0f);
+            if (mapReady) mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
+        }
+
     }
 
     @Override
     public void onLocationChanged(Location location) {
+        // update store lists
         lastKnownLocation = location;
         requestStores(location);
         Log.d(TAG, "onLocationChanged: location: " + location.getLatitude() + "; " + location.getLongitude());
