@@ -123,7 +123,9 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
                 double longitude = object.getDouble("lng");
                 boolean isOpen = object.getBoolean("open");
 
-                Store store = new Store(id, name, address, distance, latitude, longitude, new Product[]{}, isOpen);
+                ArrayList<Product> products = generateProductsList(object);
+
+                Store store = new Store(id, name, address, distance, latitude, longitude, products, isOpen);
                 Log.d(TAG, "requestStores: store created: " + store.toString());
                 stores.add(store);
             } catch (JSONException e) {
@@ -133,6 +135,40 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         adapter.notifyDataSetChanged();
         if (mapReady) displayStores();
         Log.i(TAG, "requestStores: stores: " + stores);
+    }
+
+    private ArrayList<Product> generateProductsList(JSONObject jsonStoreObject) {
+
+        ArrayList<Product> products = new ArrayList<>();
+
+        try {
+            JSONArray jsonArray = jsonStoreObject.getJSONArray("products");
+            if (jsonArray.length() == 0) {
+
+                CallAPI callAPI = new CallAPI();
+                String resultString = callAPI.execute(MainActivity.REQUEST_URL + "/product/scrape", "{}").get();
+
+                JSONObject resultJsonObject = new JSONObject(resultString);
+                jsonArray = resultJsonObject.getJSONArray("product");
+            }
+
+                for (int i=0; i<jsonArray.length(); i++) {
+
+                    // get current product from array as jsonO object
+                    JSONObject jsonProduct = jsonArray.getJSONObject(i);
+
+                    // get product id and name
+                    int id = jsonProduct.getInt("product_id");
+                    String name = jsonProduct.getString("product_name");
+
+                    // add new product to products array list
+                    products.add(new Product(id, name, "", 0));
+            }
+
+        } catch (JSONException | ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return products;
     }
 
     @Override
