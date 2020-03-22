@@ -58,6 +58,8 @@
         android:layout_height="match_parent"
         android:layout_marginTop="150dp"
         android:orientation="vertical"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="16dp">
 
@@ -151,9 +153,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="horizontal"
-
                 android:weightSum="3">
 
+                <TextView
+                    android:id="@+id/text_view_milk"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/milk"
+                    android:textSize="16sp" />
 
                 <RadioButton
                     android:id="@+id/radio_button_milk_empty"
@@ -180,16 +190,6 @@
                     android:clickable="false" />
             </RadioGroup>
 
-            <TextView
-                android:id="@+id/text_view_milk"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:text="@string/milk"
-                android:textSize="16sp" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -197,6 +197,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text_view_bread"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:text="@string/bread"
+                android:textSize="16sp" />
 
             <RadioGroup
                 android:layout_width="wrap_content"
@@ -230,16 +240,6 @@
                     android:clickable="false" />
             </RadioGroup>
 
-            <TextView
-                android:id="@+id/text_view_bread"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:text="@string/bread"
-                android:textSize="16sp" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -248,6 +248,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text_view_toilet_paper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:text="@string/toilet_paper"
+                android:textSize="16sp" />
 
             <RadioGroup
                 android:layout_width="wrap_content"
@@ -280,16 +290,6 @@
                     android:buttonTint="@color/holoGreenLight"
                     android:clickable="false" />
             </RadioGroup>
-
-            <TextView
-                android:id="@+id/text_view_toilet_paper"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:text="@string/toilet_paper"
-                android:textSize="16sp" />
 
         </LinearLayout>
 
