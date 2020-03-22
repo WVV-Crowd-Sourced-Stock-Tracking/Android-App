@@ -53,11 +53,10 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="150dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="16dp">
@@ -147,6 +146,40 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+
+                android:weightSum="3">
+
+
+                <RadioButton
+                    android:id="@+id/radio_button_milk_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/holoRedDark"
+                    android:clickable="false" />
+
+                <RadioButton
+                    android:id="@+id/radio_button_milk_less"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/holoOrangeDark"
+                    android:clickable="false" />
+
+                <RadioButton
+                    android:id="@+id/radio_button_milk_enough"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/holoGreenLight"
+                    android:clickable="false" />
+            </RadioGroup>
+
             <TextView
                 android:id="@+id/text_view_milk"
                 android:layout_width="wrap_content"
@@ -157,37 +190,6 @@
                 android:text="@string/milk"
                 android:textSize="16sp" />
 
-            <RadioGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:weightSum="3"
-
-                android:orientation="horizontal">
-
-
-                <RadioButton
-                    android:id="@+id/radio_button_milk_empty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:buttonTint="@color/holoRedDark" />
-
-                <RadioButton
-                    android:id="@+id/radio_button_milk_less"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:buttonTint="@color/holoOrangeDark" />
-
-                <RadioButton
-                    android:id="@+id/radio_button_milk_enough"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:buttonTint="@color/holoGreenLight" />
-            </RadioGroup>
-
         </LinearLayout>
 
         <LinearLayout
@@ -195,6 +197,38 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:orientation="horizontal">
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <RadioButton
+                    android:id="@+id/radio_button_bread_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/holoRedDark"
+                    android:clickable="false" />
+
+                <RadioButton
+                    android:id="@+id/radio_button_bread_less"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/holoOrangeDark"
+                    android:clickable="false" />
+
+                <RadioButton
+                    android:id="@+id/radio_button_bred_enough"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/holoGreenLight"
+                    android:clickable="false" />
+            </RadioGroup>
 
             <TextView
                 android:id="@+id/text_view_bread"
@@ -206,42 +240,46 @@
                 android:text="@string/bread"
                 android:textSize="16sp" />
 
-            <RadioGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:weightSum="3"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/radio_button_bread_empty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:buttonTint="@color/holoRedDark" />
-
-                <RadioButton
-                    android:id="@+id/radio_button_bread_less"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:buttonTint="@color/holoOrangeDark" />
-
-                <RadioButton
-                    android:id="@+id/radio_button_bred_enough"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:buttonTint="@color/holoGreenLight" />
-            </RadioGroup>
-
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:orientation="horizontal">
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <RadioButton
+                    android:id="@+id/radio_button_toilet_paper_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/holoRedDark"
+                    android:clickable="false" />
+
+                <RadioButton
+                    android:id="@+id/radio_button_toilet_paper_less"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/holoOrangeDark"
+                    android:clickable="false" />
+
+                <RadioButton
+                    android:id="@+id/radio_button_toilet_paper_enough"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/holoGreenLight"
+                    android:clickable="false" />
+            </RadioGroup>
 
             <TextView
                 android:id="@+id/text_view_toilet_paper"
@@ -253,36 +291,21 @@
                 android:text="@string/toilet_paper"
                 android:textSize="16sp" />
 
-            <RadioGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:weightSum="3"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/radio_button_toilet_paper_empty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:buttonTint="@color/holoRedDark" />
-
-                <RadioButton
-                    android:id="@+id/radio_button_toilet_paper_less"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:buttonTint="@color/holoOrangeDark" />
-
-                <RadioButton
-                    android:id="@+id/radio_button_toilet_paper_enough"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:buttonTint="@color/holoGreenLight" />
-            </RadioGroup>
-
         </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="320dp"
+            android:layout_marginLeft="320dp"
+            android:layout_marginTop="280dp"
+            android:layout_marginBottom="0dp"
+            android:clickable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
 
     </LinearLayout>
 
