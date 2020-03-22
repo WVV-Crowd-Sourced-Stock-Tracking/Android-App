@@ -1,10 +1,9 @@
 package de.nivram710.crowd_stock_supermarket.store;
 
-import android.util.Log;
-
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class Store {
+public class Store implements Serializable {
 
     private String id;
     private String name;

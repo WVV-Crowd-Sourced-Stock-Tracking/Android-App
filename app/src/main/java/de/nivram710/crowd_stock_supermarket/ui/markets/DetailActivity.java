@@ -30,6 +30,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 import de.nivram710.crowd_stock_supermarket.R;
+import de.nivram710.crowd_stock_supermarket.store.Product;
+import de.nivram710.crowd_stock_supermarket.store.Store;
 
 public class DetailActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
@@ -73,12 +75,17 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         // store all extras in variables
         Bundle extras = getIntent().getExtras();
         assert extras != null;
-        storeId = extras.getString("id");
-        name = extras.getString("name");
-        address = extras.getString("address");
-        latitude = extras.getDouble("latitude");
-        longitude = extras.getDouble("longitude");
-        isOpen = extras.getBoolean("isOpen");
+        Store store = (Store) extras.getSerializable("store");
+        Log.d(TAG, "onCreate: store: " + store);
+
+        assert store != null;
+        name = store.getName();
+        address = store.getAddress();
+        latitude = store.getLatitude();
+        longitude = store.getLongitude();
+        Product[] products = store.getProducts();
+        isOpen = store.isOpen();
+
 
         // display store name
         TextView textViewStoreName = findViewById(R.id.text_view_store_name);
@@ -125,10 +132,17 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
                 if(radioGroups.get(0).getChildAt(0).isClickable()) {
                     editButton.setImageDrawable(getDrawable(R.drawable.ic_save_white_24dp));
                 } else {
+                    transmitNewData();
                     editButton.setImageDrawable(getDrawable(R.drawable.ic_mode_edit_white_24dp));
                 }
             }
         });
+
+    }
+
+    void transmitNewData() {
+
+        // todo
 
     }
 

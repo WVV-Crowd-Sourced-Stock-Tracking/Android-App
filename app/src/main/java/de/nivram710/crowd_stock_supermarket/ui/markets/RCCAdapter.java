@@ -112,12 +112,7 @@ public class RCCAdapter extends BaseAdapter {
             public void onClick(View view) {
                 Store store = stores.get(position);
                 Intent intent = new Intent(context, DetailActivity.class);
-                intent.putExtra("id", store.getId());
-                intent.putExtra("name", store.getName());
-                intent.putExtra("address", store.getAddress());
-                intent.putExtra("latitude", store.getLatitude());
-                intent.putExtra("longitude", store.getLongitude());
-                intent.putExtra("isOpen", store.isOpen());
+                intent.putExtra("store", store);
 
                 context.startActivity(intent);
             }
