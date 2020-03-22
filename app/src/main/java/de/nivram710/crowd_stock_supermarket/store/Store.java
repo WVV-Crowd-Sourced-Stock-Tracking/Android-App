@@ -1,7 +1,8 @@
 package de.nivram710.crowd_stock_supermarket.store;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class Store implements Serializable {
 
@@ -11,7 +12,7 @@ public class Store implements Serializable {
     private double distance;
     private double latitude;
     private double longitude;
-    private Product[] products;
+    private ArrayList<Product> products;
     private boolean isOpen;
 
     public Store(String id, String name, String address, double distance, double latitude, double longitude, Product[] products, boolean isOpen) {
@@ -21,7 +22,8 @@ public class Store implements Serializable {
         this.distance = distance;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.products = products;
+        this.products = new ArrayList<>();
+        Collections.addAll(this.products, products);
         this.isOpen = isOpen;
     }
 
@@ -73,12 +75,12 @@ public class Store implements Serializable {
         this.longitude = longitude;
     }
 
-    public Product[] getProducts() {
+    public ArrayList<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(Product[] products) {
-        this.products = products;
+    public void addProduct(Product product) {
+        this.products.add(product);
     }
 
     public boolean isOpen() {
@@ -96,7 +98,7 @@ public class Store implements Serializable {
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", distance=" + distance +
-                ", products=" + Arrays.toString(products) +
+                ", products=" + products +
                 ", isOpen=" + isOpen +
                 '}';
     }

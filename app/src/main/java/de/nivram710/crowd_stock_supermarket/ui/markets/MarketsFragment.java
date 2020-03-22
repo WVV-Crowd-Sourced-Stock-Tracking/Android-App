@@ -41,8 +41,9 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
+import de.nivram710.crowd_stock_supermarket.MainActivity;
 import de.nivram710.crowd_stock_supermarket.R;
-import de.nivram710.crowd_stock_supermarket.connectivity.HTTPGetRequest;
+import de.nivram710.crowd_stock_supermarket.connectivity.CallAPI;
 import de.nivram710.crowd_stock_supermarket.store.Product;
 import de.nivram710.crowd_stock_supermarket.store.Store;
 
@@ -51,33 +52,26 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
     private static final String TAG = "MarketsFragment";
 
     private GoogleMap mGoogleMap;
-    private MapView mapView;
     private View mView;
 
     private boolean mapReady = false;
 
-    private LocationManager locationManager;
+    private Location lastKnownLocation;
 
-    Location lastKnownLocation;
-
-    private MarketsViewModel marketsViewModel;
-    private ListView listView;
     private ArrayList<Store> stores = new ArrayList<>();
     private RCCAdapter adapter;
 
-    private String REQUEST_URL = "http://3.120.206.89";
-
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_markets, container, false);
-        listView = mView.findViewById(R.id.store_list_view);
+        ListView listView = mView.findViewById(R.id.store_list_view);
 
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
         }
 
-        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         assert locationManager != null;
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, (LocationListener) this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this);
 
 
         adapter = new RCCAdapter(getContext(), stores);
@@ -89,32 +83,45 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void requestStores(Location location) {
 
-        HTTPGetRequest getRequest = new HTTPGetRequest();
+        CallAPI callAPI = new CallAPI();
         String result = null;
-        try {
-            result = (String) getRequest.execute(REQUEST_URL + "/markets?latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude()).get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
 
-        JSONArray jsonArray = new JSONArray();
+        JSONObject data = new JSONObject();
         try {
-            jsonArray = new JSONArray(result);
+            data.put("gps_width", String.valueOf(location.getLatitude()));
+            data.put("gps_length", String.valueOf(location.getLongitude()));
+            data.put("radius", 2000);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        Log.d(TAG, "requestStores: jsonArray: " + jsonArray);
-        for (int i = 0; i < jsonArray.length(); i++) {
+        try {
+            result = callAPI.execute(MainActivity.REQUEST_URL + "/market/scrape", data.toString()).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject jsonResult;
+        JSONArray jsonStoreArray = null;
+        try {
+            assert result != null;
+            jsonResult = new JSONObject(result);
+            jsonStoreArray = jsonResult.getJSONArray("supermarket");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        assert jsonStoreArray != null;
+        for (int i = 0; i < jsonStoreArray.length(); i++) {
             try {
-                JSONObject object = (JSONObject) jsonArray.get(i);
+                JSONObject object = (JSONObject) jsonStoreArray.get(i);
                 String id = object.getString("id");
                 String name = object.getString("name");
-                String address = object.getString("vicinity");
+                String address = object.getString("street");
                 double distance = object.getDouble("distance");
-                double latitude = object.getDouble("latitude");
-                double longitude = object.getDouble("longitude");
-                boolean isOpen = object.getBoolean("open_now");
+                double latitude = object.getDouble("lat");
+                double longitude = object.getDouble("lng");
+                boolean isOpen = object.getBoolean("open");
 
                 Store store = new Store(id, name, address, distance, latitude, longitude, new Product[]{}, isOpen);
                 Log.d(TAG, "requestStores: store created: " + store.toString());
@@ -132,7 +139,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mapView = mView.findViewById(R.id.map);
+        MapView mapView = mView.findViewById(R.id.map);
         if (mapView != null) {
             mapView.onCreate(null);
             mapView.onResume();
@@ -164,7 +171,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
             double longitude = store.getLongitude();
 
             float[] hsv = new float[3];
-            Color.colorToHSV(getContext().getColor(R.color.darkBlue), hsv);
+            Color.colorToHSV(Objects.requireNonNull(getContext()).getColor(R.color.darkBlue), hsv);
 
             mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude))
                     .title(store.getName())

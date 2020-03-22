@@ -27,29 +27,27 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+
+import de.nivram710.crowd_stock_supermarket.MainActivity;
 import de.nivram710.crowd_stock_supermarket.R;
+import de.nivram710.crowd_stock_supermarket.connectivity.CallAPI;
 import de.nivram710.crowd_stock_supermarket.store.Product;
 import de.nivram710.crowd_stock_supermarket.store.Store;
 
 public class DetailActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
     private GoogleMap mGoogleMap;
-    private MapView mapView;
 
-    private String storeId;
-    private String name;
-    private String address;
-    private double latitude;
-    private double longitude;
-    private boolean isOpen;
-
-    private LocationManager locationManager;
+    private boolean mapReady = false;
 
     Location lastKnownLocation;
 
-    private boolean mapReady = false;
+    Store store;
 
     private static final String TAG = "DetailActivity";
 
@@ -60,44 +58,41 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        mapView = findViewById(R.id.mapView);
+        MapView mapView = findViewById(R.id.mapView);
         if (mapView != null) {
             mapView.onCreate(null);
             mapView.onResume();
             mapView.getMapAsync(this);
         }
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         assert locationManager != null;
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, (LocationListener) this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this);
         lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
         // store all extras in variables
         Bundle extras = getIntent().getExtras();
         assert extras != null;
-        Store store = (Store) extras.getSerializable("store");
+        store = (Store) extras.getSerializable("store");
         Log.d(TAG, "onCreate: store: " + store);
 
         assert store != null;
-        name = store.getName();
-        address = store.getAddress();
-        latitude = store.getLatitude();
-        longitude = store.getLongitude();
-        Product[] products = store.getProducts();
-        isOpen = store.isOpen();
-
 
         // display store name
         TextView textViewStoreName = findViewById(R.id.text_view_store_name);
-        textViewStoreName.setText(name);
+        textViewStoreName.setText(store.getName());
+
+        store.setId("30");
+        Product product = new Product(47, "Pi", "", 100);
+        store.addProduct(product);
 
         // display store address
         TextView textViewStoreAddress = findViewById(R.id.text_view_address);
-        textViewStoreAddress.setText(address);
+        textViewStoreAddress.setText(store.getAddress());
 
         // display is open status
         TextView textViewIsOpen = findViewById(R.id.text_view_is_open);
-        if(isOpen) {
+        if(store.isOpen()) {
             textViewIsOpen.setText(getString(R.string.store_is_open));
             textViewIsOpen.setTextColor(getColor(R.color.holoGreenLight));
         } else {
@@ -142,8 +137,26 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
 
     void transmitNewData() {
 
-        // todo
+        Log.d(TAG, "transmitNewData: called");
 
+        for (Product product : store.getProducts()) {
+            CallAPI callAPI = new CallAPI();
+            String resultString = "";
+            try {
+
+                JSONObject update = new JSONObject();
+                update.put("market_id", store.getId());
+                update.put("product_id", product.getId());
+                update.put("quantity", product.getAvailability());
+
+                resultString = callAPI.execute(MainActivity.REQUEST_URL + "/market/transmit", update.toString()).get();
+                Log.d(TAG, "transmitNewData: callAPI executed");
+
+            } catch (ExecutionException | InterruptedException | JSONException e) {
+                e.printStackTrace();
+            }
+            Log.i(TAG, "transmitNewData: resultString: " + resultString);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -159,6 +172,7 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
             if (mapReady) mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
         }
 
+        assert location != null;
         Log.d(TAG, "onLocationChanged: location: " + location.getLatitude() + "; " + location.getLongitude());
     }
 
@@ -188,11 +202,11 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         float[] hsv = new float[3];
         Color.colorToHSV(getColor(R.color.darkBlue), hsv);
 
-        Log.d(TAG, "onMapReady: latitude: " + latitude);
-        Log.d(TAG, "onMapReady: longitude: " + longitude);
+        Log.d(TAG, "onMapReady: latitude: " + store.getLatitude());
+        Log.d(TAG, "onMapReady: longitude: " + store.getLongitude());
 
-        mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude))
-                .title(name)
+        mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(store.getLatitude(), store.getLongitude()))
+                .title(store.getName())
                 .icon(BitmapDescriptorFactory.defaultMarker(hsv[0])));
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
 

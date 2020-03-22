@@ -68,8 +68,8 @@ public class RCCAdapter extends BaseAdapter {
         TextView indicator_milk = view.findViewById(R.id.color_indicator_milk);
         final TextView indicator_bread = view.findViewById(R.id.color_indicator_bread);
         TextView indicator_toilet_paper = view.findViewById(R.id.color_indicator_toilet_paper);
-        if(store.getProducts().length >= 3) {
-            switch (store.getProducts()[0].getAvailability()) {
+        if(store.getProducts().size() >= 3) {
+            switch (store.getProducts().get(0).getAvailability()) {
                 case 0:
                     indicator_milk.setBackground(context.getDrawable(R.drawable.circle_red));
                 case 1:
@@ -80,7 +80,7 @@ public class RCCAdapter extends BaseAdapter {
                     indicator_milk.setBackground(context.getDrawable(R.drawable.circle_gray));
             }
 
-            switch (store.getProducts()[1].getAvailability()) {
+            switch (store.getProducts().get(1).getAvailability()) {
                 case 0:
                     indicator_bread.setBackground(context.getDrawable(R.drawable.circle_red));
                 case 1:
@@ -91,7 +91,7 @@ public class RCCAdapter extends BaseAdapter {
                     indicator_bread.setBackground(context.getDrawable(R.drawable.circle_gray));
             }
 
-            switch (store.getProducts()[1].getAvailability()) {
+            switch (store.getProducts().get(2).getAvailability()) {
                 case 0:
                     indicator_toilet_paper.setBackground(context.getDrawable(R.drawable.circle_red));
                 case 1:
