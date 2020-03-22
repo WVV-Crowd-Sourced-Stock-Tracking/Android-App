@@ -3,39 +3,33 @@ package de.nivram710.crowd_stock_supermarket.ui.markets;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -47,7 +41,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
-import de.nivram710.crowd_stock_supermarket.MainActivity;
 import de.nivram710.crowd_stock_supermarket.R;
 import de.nivram710.crowd_stock_supermarket.connectivity.HTTPGetRequest;
 import de.nivram710.crowd_stock_supermarket.store.Product;
@@ -93,6 +86,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         return mView;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void requestStores(Location location) {
 
         HTTPGetRequest getRequest = new HTTPGetRequest();
@@ -147,6 +141,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onMapReady(GoogleMap googleMap) {
         MapsInitializer.initialize(Objects.requireNonNull(getContext()));
@@ -161,17 +156,19 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         displayStores();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void displayStores() {
 
         for (Store store : stores) {
             double latitude = store.getLatitude();
             double longitude = store.getLongitude();
 
+            float[] hsv = new float[3];
+            Color.colorToHSV(getContext().getColor(R.color.darkBlue), hsv);
+
             mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude))
                     .title(store.getName())
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
-                    .alpha(.99f));
-
+                    .icon(BitmapDescriptorFactory.defaultMarker(hsv[0])));
         }
 
         // update camera
@@ -183,6 +180,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onLocationChanged(Location location) {
         // update store lists

@@ -1,5 +1,6 @@
 package de.nivram710.crowd_stock_supermarket.ui.markets;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -20,7 +21,7 @@ public class RCCAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<Store> stores;
 
-    public RCCAdapter(Context context, ArrayList<Store> stores) {
+    RCCAdapter(Context context, ArrayList<Store> stores) {
         this.context = context;
         this.stores = stores;
     }
@@ -40,6 +41,7 @@ public class RCCAdapter extends BaseAdapter {
         return position;
     }
 
+    @SuppressLint("ViewHolder")
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View getView(final int position, View view, ViewGroup viewGroup) {
@@ -113,6 +115,8 @@ public class RCCAdapter extends BaseAdapter {
                 intent.putExtra("id", store.getId());
                 intent.putExtra("name", store.getName());
                 intent.putExtra("address", store.getAddress());
+                intent.putExtra("latitude", store.getLatitude());
+                intent.putExtra("longitude", store.getLongitude());
                 intent.putExtra("isOpen", store.isOpen());
 
                 context.startActivity(intent);
