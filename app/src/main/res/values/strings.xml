@@ -16,7 +16,7 @@
     <string name="toilet_paper">Toilettenpapier</string>
     <string name="product">Produkt</string>
     <string name="availability">Bestand</string>
-    <string name="empty">leer</string>
-    <string name="less">wenig</string>
-    <string name="enough">viel</string>
+    <string name="sold_out">ausverkauft</string>
+    <string name="almost_sold_out">fast ausverkauft</string>
+    <string name="available">verfügbar</string>
 </resources>

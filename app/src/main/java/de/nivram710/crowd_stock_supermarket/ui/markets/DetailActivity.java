@@ -10,11 +10,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,7 +33,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import de.nivram710.crowd_stock_supermarket.MainActivity;
@@ -82,10 +84,6 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         TextView textViewStoreName = findViewById(R.id.text_view_store_name);
         textViewStoreName.setText(store.getName());
 
-        store.setId("30");
-        Product product = new Product(47, "Pi", "", 100);
-        store.addProduct(product);
-
         // display store address
         TextView textViewStoreAddress = findViewById(R.id.text_view_address);
         textViewStoreAddress.setText(store.getAddress());
@@ -100,15 +98,10 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
             textViewIsOpen.setTextColor(getColor(R.color.holoGreenLight));
         }
 
-        // Create RadioButtonGroups objects
-        final RadioGroup radioGroupMilk = findViewById(R.id.radio_group_milk);
-        RadioGroup radioGroupBread = findViewById(R.id.radio_group_bread);
-        RadioGroup radioGroupToiletPaper = findViewById(R.id.radio_group_toilet_paper);
+        ListView recyclerView = findViewById(R.id.list_view_products);
+        RVPAdapter adapter = new RVPAdapter(this, store.getProducts());
+        recyclerView.setAdapter(adapter);
 
-        final ArrayList<RadioGroup> radioGroups = new ArrayList<>();
-        radioGroups.add(radioGroupMilk);
-        radioGroups.add(radioGroupBread);
-        radioGroups.add(radioGroupToiletPaper);
 
         // create onClickListener
         final FloatingActionButton editButton = findViewById(R.id.floating_action_button_edit_mode);
@@ -116,20 +109,8 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
             @Override
             public void onClick(View view) {
 
-                // toggle radio buttons clickable
-                for(RadioGroup radioGroup : radioGroups) {
-                    for (int i = 0; i < radioGroup.getChildCount(); i++) {
-                        radioGroup.getChildAt(i).setClickable(!radioGroup.getChildAt(i).isClickable());
-                    }
-                }
+                // todo: enable / disable edit mode
 
-                // toggle icon of fab
-                if(radioGroups.get(0).getChildAt(0).isClickable()) {
-                    editButton.setImageDrawable(getDrawable(R.drawable.ic_save_white_24dp));
-                } else {
-                    transmitNewData();
-                    editButton.setImageDrawable(getDrawable(R.drawable.ic_mode_edit_white_24dp));
-                }
             }
         });
 

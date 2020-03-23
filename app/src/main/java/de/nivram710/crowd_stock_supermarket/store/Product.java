@@ -46,4 +46,14 @@ public class Product implements Serializable {
     public void setAvailability(int availability) {
         this.availability = availability;
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", emoticon='" + emoticon + '\'' +
+                ", availability=" + availability +
+                '}';
+    }
 }

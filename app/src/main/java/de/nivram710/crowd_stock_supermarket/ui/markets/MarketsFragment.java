@@ -73,9 +73,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         assert locationManager != null;
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this);
 
-
         adapter = new RCCAdapter(getContext(), stores);
-
         listView.setAdapter(adapter);
         return mView;
     }
@@ -139,6 +137,8 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
     private ArrayList<Product> generateProductsList(JSONObject jsonStoreObject) {
 
+        Log.d(TAG, "generateProductsList: jsonStoreObject: " + jsonStoreObject);
+
         ArrayList<Product> products = new ArrayList<>();
 
         try {
@@ -152,17 +152,24 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
                 jsonArray = resultJsonObject.getJSONArray("product");
             }
 
-                for (int i=0; i<jsonArray.length(); i++) {
+            for (int i = 0; i < jsonArray.length(); i++) {
 
-                    // get current product from array as jsonO object
-                    JSONObject jsonProduct = jsonArray.getJSONObject(i);
+                // get current product from array as jsonO object
+                JSONObject jsonProduct = jsonArray.getJSONObject(i);
 
-                    // get product id and name
-                    int id = jsonProduct.getInt("product_id");
-                    String name = jsonProduct.getString("product_name");
+                Log.d(TAG, "generateProductsList: jsonProduct: " + jsonProduct);
 
-                    // add new product to products array list
-                    products.add(new Product(id, name, "", 0));
+                // get product id and name
+                int id = jsonProduct.getInt("id");
+                String name = jsonProduct.getString("name");
+                int availability = jsonProduct.getInt("availability");
+
+                Product product = new Product(id, name, "", availability);
+
+                Log.d(TAG, "generateProductsList: product: " + product);
+
+                // add new product to products array list
+                products.add(product);
             }
 
         } catch (JSONException | ExecutionException | InterruptedException e) {
