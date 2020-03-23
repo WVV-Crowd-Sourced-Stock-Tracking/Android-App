@@ -42,4 +42,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services:12.0.1'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
+
+    implementation "androidx.leanback:leanback:1.0.0"
+    // leanback-preference is an add-on that provides a settings UI for TV apps.
+    implementation "androidx.leanback:leanback-preference:1.0.0"
+
 }

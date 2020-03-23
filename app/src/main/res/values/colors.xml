@@ -10,4 +10,14 @@
     <color name="black">#000</color>
     <color name="very_dark_gray">#222121</color>
     <color name="very_light_gray">#F4F4F4</color>
+
+    <!-- colors for button style -->
+    <color name="gradient_start_color">#4c84ff</color>
+    <color name="gradient_end_color">#10a3f3</color>
+
+    <!-- colors for tab and screen text -->
+    <color name="tab_indicator_gray">#c0c0c0</color>
+    <color name="intro_title_color">#000000</color>
+    <color name="intro_description_color">#656565</color>
+
 </resources>
