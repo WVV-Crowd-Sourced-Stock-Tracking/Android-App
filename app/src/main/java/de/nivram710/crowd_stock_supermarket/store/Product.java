@@ -5,13 +5,11 @@ import java.io.Serializable;
 public class Product implements Serializable {
     private int id;
     private String name;
-    private String emoticon;
     private int availability;
 
-    public Product(int id, String name, String emoticon, int availability) {
+    public Product(int id, String name, int availability) {
         this.id = id;
         this.name = name;
-        this.emoticon = emoticon;
         this.availability = availability;
     }
 
@@ -31,14 +29,6 @@ public class Product implements Serializable {
         this.name = name;
     }
 
-    public String getEmoticon() {
-        return emoticon;
-    }
-
-    public void setEmoticon(String emoticon) {
-        this.emoticon = emoticon;
-    }
-
     public int getAvailability() {
         return availability;
     }
@@ -52,7 +42,6 @@ public class Product implements Serializable {
         return "Product{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", emoticon='" + emoticon + '\'' +
                 ", availability=" + availability +
                 '}';
     }
