@@ -38,6 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
@@ -45,6 +46,7 @@ import de.nivram710.crowd_stock_supermarket.MainActivity;
 import de.nivram710.crowd_stock_supermarket.R;
 import de.nivram710.crowd_stock_supermarket.connectivity.CallAPI;
 import de.nivram710.crowd_stock_supermarket.store.Product;
+import de.nivram710.crowd_stock_supermarket.store.ProductComparator;
 import de.nivram710.crowd_stock_supermarket.store.Store;
 
 public class MarketsFragment extends Fragment implements OnMapReadyCallback, LocationListener {
@@ -123,7 +125,23 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
                 ArrayList<Product> products = generateProductsList(object);
 
-                Store store = new Store(id, name, address, distance, latitude, longitude, products, isOpen);
+                // add all products to store
+                Store store = new Store(id, name, address, distance, latitude, longitude, MainActivity.allAvailableProducts, isOpen);
+
+                // set the availability for singe products in store
+                for (Product product : products) {
+                    for (Product oneOfAllProducts : store.getProducts()) {
+                        if (product.getId() == oneOfAllProducts.getId()) {
+                            oneOfAllProducts.setAvailability(product.getAvailability());
+                        }
+                    }
+                }
+
+                // sort products after stock
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    products.sort(new ProductComparator());
+                }
+
                 Log.d(TAG, "requestStores: store created: " + store.toString());
                 stores.add(store);
             } catch (JSONException e) {
@@ -164,7 +182,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
                 String name = jsonProduct.getString("name");
                 int availability = jsonProduct.getInt("availability");
 
-                Product product = new Product(id, name, "", availability);
+                Product product = new Product(id, name, availability);
 
                 Log.d(TAG, "generateProductsList: product: " + product);
 

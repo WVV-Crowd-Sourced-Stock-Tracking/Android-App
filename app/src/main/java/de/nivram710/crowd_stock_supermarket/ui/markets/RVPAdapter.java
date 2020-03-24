@@ -58,7 +58,11 @@ public class RVPAdapter extends BaseAdapter {
         Log.d(TAG, "getView: product: " + product);
 
         RadioButton radioButton = view.findViewById(R.id.radio_button_status);
-        if(product.getAvailability() <= 33) {
+        if (product.getAvailability() > 100) {
+            radioButton.setChecked(true);
+            radioButton.setText(context.getString(R.string.no_stock_available));
+            radioButton.setButtonTintList(ColorStateList.valueOf(context.getColor(R.color.very_dark_gray)));
+        } else if(product.getAvailability() >= 0 && product.getAvailability() <= 33) {
             radioButton.setChecked(true);
             radioButton.setText(context.getString(R.string.sold_out));
         } else if (product.getAvailability() >= 33 && product.getAvailability() <= 66) {

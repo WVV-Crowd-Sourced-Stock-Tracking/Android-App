@@ -28,4 +28,5 @@
     <string name="button_continue">Continue</string>
     <string name="get_started">Get started</string>
     <string name="icon_description">small funny icon</string>
+    <string name="no_stock_available">no information about stock</string>
 </resources>

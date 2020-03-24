@@ -9,9 +9,20 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+
+import de.nivram710.crowd_stock_supermarket.connectivity.CallAPI;
+import de.nivram710.crowd_stock_supermarket.store.Product;
+
 public class MainActivity extends AppCompatActivity {
 
     public static final String REQUEST_URL = "https://wvvcrowdmarket.herokuapp.com/ws/rest";
+    public static ArrayList<Product> allAvailableProducts = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,5 +33,19 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(navView, navController);
 
+        CallAPI callAPI = new CallAPI();
+        try {
+            JSONObject resultObject = new JSONObject(callAPI.execute(REQUEST_URL + "/product/scrape", "{}").get());
+            JSONArray allProductsJsonArray = resultObject.getJSONArray("product");
+
+            for (int i = 0; i < allProductsJsonArray.length(); i++) {
+                JSONObject productJsonObject = allProductsJsonArray.getJSONObject(i);
+                allAvailableProducts.add(new Product(productJsonObject.getInt("product_id"),
+                        productJsonObject.getString("product_name"), 101));
+            }
+
+        } catch (JSONException | ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -28,4 +28,5 @@
     <string name="button_continue">Weiter</string>
     <string name="get_started">Beginnen</string>
     <string name="icon_description">Kleins Bild, zur Veranschaulichung des Textes</string>
+    <string name="no_stock_available">Keine Informationen verfügbar</string>
 </resources>

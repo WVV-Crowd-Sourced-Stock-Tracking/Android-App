@@ -11,13 +11,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,15 +27,8 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.concurrent.ExecutionException;
-
-import de.nivram710.crowd_stock_supermarket.MainActivity;
 import de.nivram710.crowd_stock_supermarket.R;
-import de.nivram710.crowd_stock_supermarket.connectivity.CallAPI;
-import de.nivram710.crowd_stock_supermarket.store.Product;
+import de.nivram710.crowd_stock_supermarket.store.ProductComparator;
 import de.nivram710.crowd_stock_supermarket.store.Store;
 
 public class DetailActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
@@ -98,6 +88,11 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
             textViewIsOpen.setTextColor(getColor(R.color.holoRedDark));
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            store.getProducts().sort(new ProductComparator());
+        }
+
+        // setup adapter for listView
         ListView recyclerView = findViewById(R.id.list_view_products);
         RVPAdapter adapter = new RVPAdapter(this, store.getProducts());
         recyclerView.setAdapter(adapter);
@@ -114,30 +109,6 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
             }
         });
 
-    }
-
-    void transmitNewData() {
-
-        Log.d(TAG, "transmitNewData: called");
-
-        for (Product product : store.getProducts()) {
-            CallAPI callAPI = new CallAPI();
-            String resultString = "";
-            try {
-
-                JSONObject update = new JSONObject();
-                update.put("market_id", store.getId());
-                update.put("product_id", product.getId());
-                update.put("quantity", product.getAvailability());
-
-                resultString = callAPI.execute(MainActivity.REQUEST_URL + "/market/transmit", update.toString()).get();
-                Log.d(TAG, "transmitNewData: callAPI executed");
-
-            } catch (ExecutionException | InterruptedException | JSONException e) {
-                e.printStackTrace();
-            }
-            Log.i(TAG, "transmitNewData: resultString: " + resultString);
-        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
