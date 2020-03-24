@@ -14,7 +14,6 @@ import androidx.viewpager.widget.PagerAdapter;
 import java.util.List;
 
 import de.nivram710.crowd_stock_supermarket.R;
-import de.nivram710.crowd_stock_supermarket.ScreenItem;
 
 public class IntroViewPagerAdapter extends PagerAdapter {
 

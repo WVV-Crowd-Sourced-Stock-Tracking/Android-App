@@ -18,7 +18,6 @@ import java.util.List;
 
 import de.nivram710.crowd_stock_supermarket.MainActivity;
 import de.nivram710.crowd_stock_supermarket.R;
-import de.nivram710.crowd_stock_supermarket.ScreenItem;
 
 public class IntroActivity extends AppCompatActivity {
 
