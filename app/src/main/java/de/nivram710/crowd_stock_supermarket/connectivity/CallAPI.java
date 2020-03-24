@@ -23,16 +23,16 @@ public class CallAPI extends AsyncTask<String, String, String> {
     @Override
     protected String doInBackground(String... strings) {
         Log.d(TAG, "doInBackground: called");
-        String reguestUrlString = strings[0];
+        String requestUrlString = strings[0];
         String data = strings[1];
         String result = "failed";
 
-        Log.i(TAG, "doInBackground: requestUrlString: " + reguestUrlString);
+        Log.i(TAG, "doInBackground: requestUrlString: " + requestUrlString);
         Log.i(TAG, "doInBackground: data: " + data);
 
         try {
             // create connection object
-            URL requestUrl = new URL(reguestUrlString);
+            URL requestUrl = new URL(requestUrlString);
             connection = (HttpURLConnection) requestUrl.openConnection();
 
             // setup connection
