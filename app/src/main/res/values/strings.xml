@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">What\'s Left?</string>
+    <string name="app_name" translatable="false">What\'s left?</string>
     <string name="navbar_map">Karte</string>
     <string name="navbar_markets">Läden</string>
     <string name="navbar_shopping_list">Einkaufsliste</string>
@@ -19,4 +19,13 @@
     <string name="sold_out">ausverkauft</string>
     <string name="almost_sold_out">fast ausverkauft</string>
     <string name="available">verfügbar</string>
+    <string name="onboarding_title_1">1. Frag nach</string>
+    <string name="onboarding_message_1">Schau erst nach, ob die Dinge auf deiner Einkaufsliste auch wirklich noch verfügbar sind.</string>
+    <string name="onboarding_title_2">2. Spare Zeit</string>
+    <string name="onboarding_message_2">Spare Zeit indem du erst gar nicht vor leeren Regalen stehst!</string>
+    <string name="onboarding_title_3">3. Hilf anderen</string>
+    <string name="onboarding_message_3">Hilf anderen und melde wieviele Dinge es noch zu kaufen gibt.</string>
+    <string name="button_continue">Weiter</string>
+    <string name="get_started">Beginnen</string>
+    <string name="icon_description">Kleins Bild, zur Veranschaulichung des Textes</string>
 </resources>

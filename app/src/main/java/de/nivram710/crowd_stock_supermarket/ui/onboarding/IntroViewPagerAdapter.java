@@ -1,5 +1,6 @@
-package de.nivram710.crowd_stock_supermarket;
+package de.nivram710.crowd_stock_supermarket.ui.onboarding;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +13,15 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import java.util.List;
 
+import de.nivram710.crowd_stock_supermarket.R;
+import de.nivram710.crowd_stock_supermarket.ScreenItem;
+
 public class IntroViewPagerAdapter extends PagerAdapter {
 
-    Context mContext;
-    List<ScreenItem> mListScreen;
+    private Context mContext;
+    private List<ScreenItem> mListScreen;
 
-    public IntroViewPagerAdapter(Context mContext, List<ScreenItem> mListScreen) {
+    IntroViewPagerAdapter(Context mContext, List<ScreenItem> mListScreen) {
         this.mContext = mContext;
         this.mListScreen = mListScreen;
     }
@@ -27,7 +31,8 @@ public class IntroViewPagerAdapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
 
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layoutScreen = inflater.inflate(R.layout.layout_screen, null);
+        assert inflater != null;
+        @SuppressLint("InflateParams") View layoutScreen = inflater.inflate(R.layout.layout_screen, null);
         ImageView imgSlide = layoutScreen.findViewById(R.id.intro_img1);
         TextView title = layoutScreen.findViewById(R.id.intro_title);
         TextView description = layoutScreen.findViewById(R.id.intro_description);

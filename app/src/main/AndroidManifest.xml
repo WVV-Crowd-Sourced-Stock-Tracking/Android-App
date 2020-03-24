@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="de.nivram710.crowd_stock_supermarket">
 
     <uses-feature
@@ -10,6 +11,9 @@
         android:required="false" />
     <uses-feature
         android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
         android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -24,9 +28,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        android:banner="TODO">
+        android:banner="@mipmap/ic_launcher_background"
+        tools:targetApi="m"
+        android:fullBackupContent="true">
         <activity
-            android:name=".IntroActivity"
+            android:name=".ui.onboarding.IntroActivity"
             android:label="What's Left?">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,10 +42,8 @@
 
         </activity>
         <activity android:name=".ui.markets.DetailActivity" />
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name">
-        </activity>
+
+        <activity android:name=".MainActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
