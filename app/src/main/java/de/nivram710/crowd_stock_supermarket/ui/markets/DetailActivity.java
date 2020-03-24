@@ -95,7 +95,7 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
             textViewIsOpen.setTextColor(getColor(R.color.holoGreenLight));
         } else {
             textViewIsOpen.setText(getString(R.string.store_is_closed));
-            textViewIsOpen.setTextColor(getColor(R.color.holoGreenLight));
+            textViewIsOpen.setTextColor(getColor(R.color.holoRedDark));
         }
 
         ListView recyclerView = findViewById(R.id.list_view_products);
