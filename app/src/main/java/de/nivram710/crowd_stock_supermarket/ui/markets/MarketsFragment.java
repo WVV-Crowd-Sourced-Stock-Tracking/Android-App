@@ -128,6 +128,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
                 // add all products to store
                 Store store = new Store(id, name, address, distance, latitude, longitude, MainActivity.allAvailableProducts, isOpen);
 
+                // todo: find a less time consumption way to store the right availability
                 // set the availability for singe products in store
                 for (Product product : products) {
                     for (Product oneOfAllProducts : store.getProducts()) {
