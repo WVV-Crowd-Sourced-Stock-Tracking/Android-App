@@ -8,16 +8,18 @@ public class Store implements Serializable {
     private String id;
     private String name;
     private String address;
+    private String city;
     private double distance;
     private double latitude;
     private double longitude;
     private ArrayList<Product> products;
     private boolean isOpen;
 
-    public Store(String id, String name, String address, double distance, double latitude, double longitude, ArrayList<Product> products, boolean isOpen) {
+    public Store(String id, String name, String address, String city, double distance, double latitude, double longitude, ArrayList<Product> products, boolean isOpen) {
         this.id = id;
         this.name = name;
         this.address = address;
+        this.city = city;
         this.distance = distance;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -43,6 +45,14 @@ public class Store implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public double getDistance() {

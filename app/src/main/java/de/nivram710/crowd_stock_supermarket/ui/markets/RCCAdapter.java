@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 
+import de.nivram710.crowd_stock_supermarket.MainActivity;
 import de.nivram710.crowd_stock_supermarket.R;
 import de.nivram710.crowd_stock_supermarket.store.Store;
 
@@ -53,7 +54,7 @@ public class RCCAdapter extends BaseAdapter {
         textViewName.setText(store.getName());
 
         TextView textViewAddress = view.findViewById(R.id.text_view_store_address);
-        String addressDistance = store.getAddress() + " - " + (int) store.getDistance() + "m";
+        String addressDistance = store.getAddress() + ", " + store.getCity() + " - " + MainActivity.getFormattedDistance(store.getDistance());
         textViewAddress.setText(addressDistance);
 
         TextView textViewIsOpen = view.findViewById(R.id.text_view_is_open);

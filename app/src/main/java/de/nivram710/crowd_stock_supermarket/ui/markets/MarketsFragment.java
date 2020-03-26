@@ -38,7 +38,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
@@ -118,6 +117,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
                 String id = object.getString("id");
                 String name = object.getString("name");
                 String address = object.getString("street");
+                String city = object.getString("city");
                 double distance = object.getDouble("distance");
                 double latitude = object.getDouble("lat");
                 double longitude = object.getDouble("lng");
@@ -126,7 +126,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
                 ArrayList<Product> products = generateProductsList(object);
 
                 // add all products to store
-                Store store = new Store(id, name, address, distance, latitude, longitude, MainActivity.allAvailableProducts, isOpen);
+                Store store = new Store(id, name, address, city, distance, latitude, longitude, MainActivity.allAvailableProducts, isOpen);
 
                 // todo: find a less time consumption way to store the right availability
                 // set the availability for singe products in store

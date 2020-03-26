@@ -89,7 +89,9 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
 
         // display store address
         TextView textViewStoreAddress = findViewById(R.id.text_view_address);
-        textViewStoreAddress.setText(store.getAddress());
+
+        String addressString = store.getAddress() + ", " + store.getCity() + " - " + MainActivity.getFormattedDistance(store.getDistance());
+        textViewStoreAddress.setText(addressString);
 
         // display is open status
         TextView textViewIsOpen = findViewById(R.id.text_view_is_open);

@@ -48,4 +48,18 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    public static String getFormattedDistance(double distance) {
+        String distanceString;
+        if((int) distance > 1099) {
+            double distanceInKm = distance / 1000;
+            double distanceInKmRight = distanceInKm * 100;
+            distanceInKm = (int) distanceInKmRight / 100d;
+            distanceString = distanceInKm + "km";
+        } else {
+            distanceString = (int) distance + "m";
+        }
+        return distanceString;
+    }
+
 }
