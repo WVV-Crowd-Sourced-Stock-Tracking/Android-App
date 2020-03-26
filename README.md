@@ -2,6 +2,7 @@
   <img src="./img/WhatsleftLogo.svg" align="right" width="128" height="128" />
   <img src="./img/wirvsviruslogo.png" align="right" width="264" height="128" />
 </h2>
+
 ![wirVsVirus](https://img.shields.io/badge/hackathon-%23WirVsVirus-yellowgreen.svg?style=flat)
 ![Java 11](https://img.shields.io/badge/java-11-blue.svg?style=flat)
 ![android](https://img.shields.io/badge/os-android-green.svg?style=flat)
