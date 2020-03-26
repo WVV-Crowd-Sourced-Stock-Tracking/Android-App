@@ -29,4 +29,6 @@
     <string name="get_started">Get started</string>
     <string name="icon_description">small funny icon</string>
     <string name="no_stock_available">no information</string>
+    <string name="transmit_successful">Data sent successful</string>
+    <string name="transmit_failed">An error occurred during the update</string>
 </resources>

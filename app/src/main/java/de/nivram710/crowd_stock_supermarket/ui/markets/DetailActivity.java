@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,21 +28,33 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.concurrent.ExecutionException;
+
+import de.nivram710.crowd_stock_supermarket.MainActivity;
 import de.nivram710.crowd_stock_supermarket.R;
+import de.nivram710.crowd_stock_supermarket.connectivity.CallAPI;
+import de.nivram710.crowd_stock_supermarket.store.Product;
 import de.nivram710.crowd_stock_supermarket.store.ProductComparator;
 import de.nivram710.crowd_stock_supermarket.store.Store;
 
 public class DetailActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
     private GoogleMap mGoogleMap;
-
     private boolean mapReady = false;
+    private boolean editModeEnabled = false;
+    private FloatingActionButton editButton;
+    private Location lastKnownLocation;
+    private Store store;
 
-    Location lastKnownLocation;
-
-    Store store;
+    private ListView listView;
 
     private static final String TAG = "DetailActivity";
+
+    public DetailActivity() {
+    }
 
     @SuppressLint("MissingPermission")
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -80,7 +93,7 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
 
         // display is open status
         TextView textViewIsOpen = findViewById(R.id.text_view_is_open);
-        if(store.isOpen()) {
+        if (store.isOpen()) {
             textViewIsOpen.setText(getString(R.string.store_is_open));
             textViewIsOpen.setTextColor(getColor(R.color.holoGreenLight));
         } else {
@@ -93,22 +106,78 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         }
 
         // setup adapter for listView
-        ListView recyclerView = findViewById(R.id.list_view_products);
+        listView = findViewById(R.id.list_view_products);
         RVPAdapter adapter = new RVPAdapter(this, store.getProducts());
-        recyclerView.setAdapter(adapter);
+        listView.setAdapter(adapter);
 
 
         // create onClickListener
-        final FloatingActionButton editButton = findViewById(R.id.floating_action_button_edit_mode);
+        editButton = findViewById(R.id.floating_action_button_edit_mode);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                // todo: enable / disable edit mode
+                if (editModeEnabled) disableEditMode();
+                else enableEditMode();
 
             }
         });
 
+    }
+
+    private void enableEditMode() {
+
+        editButton.setImageDrawable(getDrawable(R.drawable.ic_save_white_24dp));
+
+        RVPEAdapter rvpeAdapter = new RVPEAdapter(this, store.getProducts());
+        listView.setAdapter(rvpeAdapter);
+
+        Log.i(TAG, "enableEditMode: editMode initiated successfully");
+        editModeEnabled = true;
+    }
+
+    @SuppressLint("ShowToast")
+    private void disableEditMode() {
+
+        editButton.setImageDrawable(getDrawable(R.drawable.ic_mode_edit_white_24dp));
+
+        boolean transmitSuccessful = transmitData();
+        if (transmitSuccessful)
+            Toast.makeText(this, getString(R.string.transmit_successful), Toast.LENGTH_LONG);
+        else Toast.makeText(this, getString(R.string.transmit_failed), Toast.LENGTH_LONG);
+
+        RVPAdapter rvpAdapter = new RVPAdapter(this, store.getProducts());
+        listView.setAdapter(rvpAdapter);
+
+
+        Log.i(TAG, "disableEditMode: edit mode closed successfully");
+        editModeEnabled = false;
+    }
+
+    private boolean transmitData() {
+
+        boolean transmitSuccessful = true;
+
+        for (Product product : store.getProducts()) {
+            if (product.getAvailability() < 100) {
+                CallAPI callAPI = new CallAPI();
+                try {
+
+                    JSONObject data = new JSONObject();
+                    data.put("market_id", store.getId());
+                    data.put("product_id", product.getId());
+                    data.put("quantity", product.getAvailability());
+
+                    JSONObject resultJsonObject = new JSONObject(callAPI.execute(MainActivity.REQUEST_URL + "/market/transmit", data.toString()).get());
+                    if (!resultJsonObject.getString("result").equals("success"))
+                        transmitSuccessful = false;
+                    Log.i(TAG, "transmitData: product: " + product + "; transmit: " + resultJsonObject.getString("result"));
+                } catch (JSONException | ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return transmitSuccessful;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
