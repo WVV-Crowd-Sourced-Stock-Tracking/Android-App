@@ -3,6 +3,7 @@ package de.nivram710.crowd_stock_supermarket.ui.markets;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,47 +67,25 @@ public class RCCAdapter extends BaseAdapter {
             textViewIsOpen.setTextColor(context.getColor(R.color.holoRedDark));
         }
 
-        TextView indicator_milk = view.findViewById(R.id.color_indicator_milk);
-        final TextView indicator_bread = view.findViewById(R.id.color_indicator_bread);
-        TextView indicator_toilet_paper = view.findViewById(R.id.color_indicator_toilet_paper);
-        if(store.getProducts().size() >= 3) {
-            switch (store.getProducts().get(0).getAvailability()) {
-                case 0:
-                    indicator_milk.setBackground(context.getDrawable(R.drawable.circle_red));
-                case 1:
-                    indicator_milk.setBackground(context.getDrawable(R.drawable.circle_yellow));
-                case 2:
-                    indicator_milk.setBackground(context.getDrawable(R.drawable.circle_green));
-                default:
-                    indicator_milk.setBackground(context.getDrawable(R.drawable.circle_gray));
-            }
+        // get product name text views
+        TextView textViewProduct1 = view.findViewById(R.id.text_view_product_1);
+        TextView textViewProduct2 = view.findViewById(R.id.text_view_product_2);
+        TextView textViewProduct3 = view.findViewById(R.id.text_view_product_3);
 
-            switch (store.getProducts().get(1).getAvailability()) {
-                case 0:
-                    indicator_bread.setBackground(context.getDrawable(R.drawable.circle_red));
-                case 1:
-                    indicator_bread.setBackground(context.getDrawable(R.drawable.circle_yellow));
-                case 2:
-                    indicator_bread.setBackground(context.getDrawable(R.drawable.circle_green));
-                default:
-                    indicator_bread.setBackground(context.getDrawable(R.drawable.circle_gray));
-            }
+        // set text for product name text views
+        textViewProduct1.setText(store.getProducts().get(0).getName());
+        textViewProduct2.setText(store.getProducts().get(1).getName());
+        textViewProduct3.setText(store.getProducts().get(2).getName());
 
-            switch (store.getProducts().get(2).getAvailability()) {
-                case 0:
-                    indicator_toilet_paper.setBackground(context.getDrawable(R.drawable.circle_red));
-                case 1:
-                    indicator_toilet_paper.setBackground(context.getDrawable(R.drawable.circle_yellow));
-                case 2:
-                    indicator_toilet_paper.setBackground(context.getDrawable(R.drawable.circle_green));
-                default:
-                    indicator_toilet_paper.setBackground(context.getDrawable(R.drawable.circle_gray));
-            }
-        } else {
-            indicator_milk.setBackground(context.getDrawable(R.drawable.circle_gray));
-            indicator_bread.setBackground(context.getDrawable(R.drawable.circle_gray));
-            indicator_toilet_paper.setBackground(context.getDrawable(R.drawable.circle_gray));
-        }
+        // get color indicator text views
+        TextView colorIndicatorProduct1 = view.findViewById(R.id.color_indicator_product_1);
+        TextView colorIndicatorProduct2 = view.findViewById(R.id.color_indicator_product_2);
+        TextView colorIndicatorProduct3 = view.findViewById(R.id.color_indicator_product_3);
+
+        // set color for color indicator
+        colorIndicatorProduct1.setBackgroundTintList(ColorStateList.valueOf(getIndicatorColor(store.getProducts().get(0).getAvailability())));
+        colorIndicatorProduct2.setBackgroundTintList(ColorStateList.valueOf(getIndicatorColor(store.getProducts().get(1).getAvailability())));
+        colorIndicatorProduct3.setBackgroundTintList(ColorStateList.valueOf(getIndicatorColor(store.getProducts().get(2).getAvailability())));
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,5 +99,18 @@ public class RCCAdapter extends BaseAdapter {
         });
 
         return view;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private int getIndicatorColor(int availability) {
+        if (availability > 0 && availability < 34) {
+            return context.getColor(R.color.holoRedDark);
+        } else if (availability > 33 && availability < 67) {
+            return context.getColor(R.color.holoOrangeDark);
+        } else if (availability > 66 && availability < 101) {
+            return context.getColor(R.color.holoGreenLight);
+        } else {
+            return context.getColor(R.color.darkerGray);
+        }
     }
 }

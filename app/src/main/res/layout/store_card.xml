@@ -60,13 +60,15 @@
             android:layout_marginBottom="15dp">
 
             <TextView
-                android:id="@+id/color_indicator_milk"
+                android:id="@+id/color_indicator_product_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/background_circle"
+                android:backgroundTint="@color/holoRedDark"
                 android:layout_marginStart="20dp" />
 
             <TextView
-                android:id="@+id/text_view_milk"
+                android:id="@+id/text_view_product_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -74,13 +76,15 @@
                 android:text="@string/milk" />
 
             <TextView
-                android:id="@+id/color_indicator_bread"
+                android:id="@+id/color_indicator_product_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/background_circle"
+                android:backgroundTint="@color/holoRedDark"
                 android:layout_marginStart="40dp" />
 
             <TextView
-                android:id="@+id/text_view_bread"
+                android:id="@+id/text_view_product_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -88,13 +92,15 @@
                 android:text="@string/bread" />
 
             <TextView
-                android:id="@+id/color_indicator_toilet_paper"
+                android:id="@+id/color_indicator_product_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/background_circle"
+                android:backgroundTint="@color/holoRedDark"
                 android:layout_marginStart="40dp" />
 
             <TextView
-                android:id="@+id/text_view_toilet_paper"
+                android:id="@+id/text_view_product_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
