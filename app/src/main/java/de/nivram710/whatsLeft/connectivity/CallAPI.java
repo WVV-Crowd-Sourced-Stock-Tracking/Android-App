@@ -1,4 +1,4 @@
-package de.nivram710.crowd_stock_supermarket.connectivity;
+package de.nivram710.whatsLeft.connectivity;
 
 import android.os.AsyncTask;
 import android.util.Log;

@@ -1,4 +1,4 @@
-package de.nivram710.crowd_stock_supermarket.store;
+package de.nivram710.whatsLeft.store;
 
 import java.io.Serializable;
 import java.util.ArrayList;

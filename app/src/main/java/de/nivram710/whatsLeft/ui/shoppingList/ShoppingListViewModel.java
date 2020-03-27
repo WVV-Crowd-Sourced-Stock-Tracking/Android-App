@@ -1,16 +1,16 @@
-package de.nivram710.crowd_stock_supermarket.ui.markets;
+package de.nivram710.whatsLeft.ui.shoppingList;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class MarketsViewModel extends ViewModel {
+public class ShoppingListViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public MarketsViewModel() {
+    public ShoppingListViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
+        mText.setValue("This is notifications fragment");
     }
 
     LiveData<String> getText() {

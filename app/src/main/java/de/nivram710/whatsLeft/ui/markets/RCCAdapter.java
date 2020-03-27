@@ -1,4 +1,4 @@
-package de.nivram710.crowd_stock_supermarket.ui.markets;
+package de.nivram710.whatsLeft.ui.markets;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -14,9 +14,9 @@ import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 
-import de.nivram710.crowd_stock_supermarket.MainActivity;
-import de.nivram710.crowd_stock_supermarket.R;
-import de.nivram710.crowd_stock_supermarket.store.Store;
+import de.nivram710.whatsLeft.MainActivity;
+import de.nivram710.whatsLeft.R;
+import de.nivram710.whatsLeft.store.Store;
 
 public class RCCAdapter extends BaseAdapter {
 

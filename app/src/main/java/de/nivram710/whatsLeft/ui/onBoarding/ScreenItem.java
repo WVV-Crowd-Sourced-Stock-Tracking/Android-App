@@ -1,4 +1,4 @@
-package de.nivram710.crowd_stock_supermarket.ui.onboarding;
+package de.nivram710.whatsLeft.ui.onBoarding;
 
 class ScreenItem {
     private String Title,Description;

@@ -1,4 +1,4 @@
-package de.nivram710.crowd_stock_supermarket.ui.markets;
+package de.nivram710.whatsLeft.ui.markets;
 
 import android.Manifest;
 import android.content.Context;
@@ -42,12 +42,12 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
-import de.nivram710.crowd_stock_supermarket.MainActivity;
-import de.nivram710.crowd_stock_supermarket.R;
-import de.nivram710.crowd_stock_supermarket.connectivity.CallAPI;
-import de.nivram710.crowd_stock_supermarket.store.Product;
-import de.nivram710.crowd_stock_supermarket.store.ProductComparator;
-import de.nivram710.crowd_stock_supermarket.store.Store;
+import de.nivram710.whatsLeft.MainActivity;
+import de.nivram710.whatsLeft.R;
+import de.nivram710.whatsLeft.connectivity.CallAPI;
+import de.nivram710.whatsLeft.store.Product;
+import de.nivram710.whatsLeft.store.ProductComparator;
+import de.nivram710.whatsLeft.store.Store;
 
 public class MarketsFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 

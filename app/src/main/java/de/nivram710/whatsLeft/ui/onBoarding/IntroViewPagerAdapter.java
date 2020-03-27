@@ -1,4 +1,4 @@
-package de.nivram710.crowd_stock_supermarket.ui.onboarding;
+package de.nivram710.whatsLeft.ui.onBoarding;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -13,7 +13,7 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import java.util.List;
 
-import de.nivram710.crowd_stock_supermarket.R;
+import de.nivram710.whatsLeft.R;
 
 public class IntroViewPagerAdapter extends PagerAdapter {
 

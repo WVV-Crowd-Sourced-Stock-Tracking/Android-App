@@ -1,4 +1,4 @@
-package de.nivram710.crowd_stock_supermarket.ui.markets;
+package de.nivram710.whatsLeft.ui.markets;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -15,8 +15,8 @@ import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 
-import de.nivram710.crowd_stock_supermarket.R;
-import de.nivram710.crowd_stock_supermarket.store.Product;
+import de.nivram710.whatsLeft.R;
+import de.nivram710.whatsLeft.store.Product;
 
 public class RVPEAdapter extends BaseAdapter {
 

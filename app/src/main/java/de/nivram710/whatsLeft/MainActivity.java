@@ -1,4 +1,4 @@
-package de.nivram710.crowd_stock_supermarket;
+package de.nivram710.whatsLeft;
 
 import android.os.Bundle;
 
@@ -16,8 +16,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import de.nivram710.crowd_stock_supermarket.connectivity.CallAPI;
-import de.nivram710.crowd_stock_supermarket.store.Product;
+import de.nivram710.whatsLeft.connectivity.CallAPI;
+import de.nivram710.whatsLeft.store.Product;
 
 public class MainActivity extends AppCompatActivity {
 

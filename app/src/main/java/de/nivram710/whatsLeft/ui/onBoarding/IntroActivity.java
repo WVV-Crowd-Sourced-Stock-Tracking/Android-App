@@ -1,4 +1,4 @@
-package de.nivram710.crowd_stock_supermarket.ui.onboarding;
+package de.nivram710.whatsLeft.ui.onBoarding;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,8 +16,8 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.nivram710.crowd_stock_supermarket.MainActivity;
-import de.nivram710.crowd_stock_supermarket.R;
+import de.nivram710.whatsLeft.MainActivity;
+import de.nivram710.whatsLeft.R;
 
 public class IntroActivity extends AppCompatActivity {
 

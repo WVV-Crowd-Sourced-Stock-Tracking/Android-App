@@ -1,4 +1,4 @@
-package de.nivram710.crowd_stock_supermarket.ui.shoppingList;
+package de.nivram710.whatsLeft.ui.shoppingList;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import de.nivram710.crowd_stock_supermarket.R;
+import de.nivram710.whatsLeft.R;
 
 public class ShoppingListFragment extends Fragment {
 
