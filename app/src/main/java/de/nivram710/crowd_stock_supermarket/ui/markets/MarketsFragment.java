@@ -151,6 +151,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         ArrayList<Product> products = new ArrayList<>();
         boolean[] productsInList = new boolean[MainActivity.highestID + 1];
         Arrays.fill(productsInList, Boolean.FALSE);
+
         try {
 
             JSONArray jsonArray = jsonStoreObject.getJSONArray("products");
@@ -171,6 +172,10 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+
+        for (Product product : products) {
+            productsInList[product.getId()] = true;
         }
 
         for (Product product : MainActivity.allAvailableProducts) {
