@@ -152,7 +152,6 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         editModeEnabled = true;
     }
 
-    @SuppressLint("ShowToast")
     private void disableEditMode() {
 
         editButton.setImageDrawable(getDrawable(R.drawable.ic_mode_edit_white_24dp));
@@ -164,8 +163,8 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
 
         boolean transmitSuccessful = transmitData();
         if (transmitSuccessful)
-            Toast.makeText(this, getString(R.string.transmit_successful), Toast.LENGTH_LONG);
-        else Toast.makeText(this, getString(R.string.transmit_failed), Toast.LENGTH_LONG);
+            Toast.makeText(this, getString(R.string.transmit_successful), Toast.LENGTH_LONG).show();
+        else Toast.makeText(this, getString(R.string.transmit_failed), Toast.LENGTH_LONG).show();
 
         RVPAdapter rvpAdapter = new RVPAdapter(this, store.getProducts());
         listView.setAdapter(rvpAdapter);
