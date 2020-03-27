@@ -38,6 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
@@ -126,17 +127,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
                 ArrayList<Product> products = generateProductsList(object);
 
                 // add all products to store
-                Store store = new Store(id, name, address, city, distance, latitude, longitude, MainActivity.allAvailableProducts, isOpen);
-
-                // todo: find a less time consumption way to store the right availability
-                // set the availability for singe products in store
-                for (Product product : products) {
-                    for (Product oneOfAllProducts : store.getProducts()) {
-                        if (product.getId() == oneOfAllProducts.getId()) {
-                            oneOfAllProducts.setAvailability(product.getAvailability());
-                        }
-                    }
-                }
+                Store store = new Store(id, name, address, city, distance, latitude, longitude, products, isOpen);
 
                 // sort products after stock
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -155,45 +146,40 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
     }
 
     private ArrayList<Product> generateProductsList(JSONObject jsonStoreObject) {
-
-        Log.d(TAG, "generateProductsList: jsonStoreObject: " + jsonStoreObject);
-
         ArrayList<Product> products = new ArrayList<>();
-
+        boolean[] productsInList = new boolean[MainActivity.highestID + 1];
+        Arrays.fill(productsInList, Boolean.FALSE);
         try {
+
             JSONArray jsonArray = jsonStoreObject.getJSONArray("products");
-            if (jsonArray.length() == 0) {
 
-                CallAPI callAPI = new CallAPI();
-                String resultString = callAPI.execute(MainActivity.REQUEST_URL + "/product/scrape", "{}").get();
+            for(int i=0; i<jsonArray.length(); i++) {
 
-                JSONObject resultJsonObject = new JSONObject(resultString);
-                jsonArray = resultJsonObject.getJSONArray("product");
-            }
+                // get json attributes and store them in temp variables
+                JSONObject productJsonObject = jsonArray.getJSONObject(i);
+                int id = productJsonObject.getInt("id");
+                String name = productJsonObject.getString("name");
+                int availability = productJsonObject.getInt("availability");
 
-            for (int i = 0; i < jsonArray.length(); i++) {
-
-                // get current product from array as jsonO object
-                JSONObject jsonProduct = jsonArray.getJSONObject(i);
-
-                Log.d(TAG, "generateProductsList: jsonProduct: " + jsonProduct);
-
-                // get product id and name
-                int id = jsonProduct.getInt("id");
-                String name = jsonProduct.getString("name");
-                int availability = jsonProduct.getInt("availability");
-
+                // create product and store it in array list
                 Product product = new Product(id, name, availability);
-
-                Log.d(TAG, "generateProductsList: product: " + product);
-
-                // add new product to products array list
                 products.add(product);
             }
 
-        } catch (JSONException | ExecutionException | InterruptedException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        for (Product product : MainActivity.allAvailableProducts) {
+            if (!productsInList[product.getId()]) {
+                try {
+                    products.add((Product) product.clone());
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         return products;
     }
 

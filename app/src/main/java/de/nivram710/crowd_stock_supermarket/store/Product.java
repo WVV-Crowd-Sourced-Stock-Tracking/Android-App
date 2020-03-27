@@ -1,8 +1,10 @@
 package de.nivram710.crowd_stock_supermarket.store;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 
-public class Product implements Serializable {
+public class Product implements Serializable, Cloneable {
     private int id;
     private String name;
     private int availability;
@@ -35,6 +37,12 @@ public class Product implements Serializable {
 
     public void setAvailability(int availability) {
         this.availability = availability;
+    }
+
+    @NonNull
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     @Override
