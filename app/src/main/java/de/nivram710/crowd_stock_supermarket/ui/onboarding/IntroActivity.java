@@ -1,8 +1,5 @@
 package de.nivram710.crowd_stock_supermarket.ui.onboarding;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +7,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -52,9 +52,9 @@ public class IntroActivity extends AppCompatActivity {
 
         // fill list screen
         List<ScreenItem> mList = new ArrayList<>();
-        mList.add(new ScreenItem(getString(R.string.app_name), getString(R.string.onboarding_message_1), R.drawable.ic_onboarding1));
-        mList.add(new ScreenItem(getString(R.string.app_name), getString(R.string.onboarding_message_2), R.drawable.ic_onboarding2));
-        mList.add(new ScreenItem(getString(R.string.app_name), getString(R.string.onboarding_message_3), R.drawable.ic_onboarding3));
+        mList.add(new ScreenItem(getString(R.string.app_name), getString(R.string.on_boarding_message_1), R.drawable.ic_onboarding1));
+        mList.add(new ScreenItem(getString(R.string.app_name), getString(R.string.on_boarding_message_2), R.drawable.ic_onboarding2));
+        mList.add(new ScreenItem(getString(R.string.app_name), getString(R.string.on_boarding_message_3), R.drawable.ic_onboarding3));
 
         // setup viewpager
         screenPager = findViewById(R.id.screen_viewpager);

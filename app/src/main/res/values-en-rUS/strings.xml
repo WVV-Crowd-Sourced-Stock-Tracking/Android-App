@@ -19,16 +19,18 @@
     <string name="sold_out">sold out</string>
     <string name="almost_sold_out">alomost sold out</string>
     <string name="available">available</string>
-    <string name="onboarding_title_1">1. Ask for it</string>
-    <string name="onboarding_message_1">Look up if the items on your shopping list are available</string>
-    <string name="onboarding_title_2">2. Don\'t waste time</string>
-    <string name="onboarding_message_2">Don\'t lose you important time with standing in front of empty shelves!</string>
-    <string name="onboarding_title_3">3. Help others</string>
-    <string name="onboarding_message_3">Help others and report what is available.</string>
+    <string name="on_boarding_title_1">1. Ask for it</string>
+    <string name="on_boarding_message_1">Look up if the items on your shopping list are available</string>
+    <string name="on_boarding_title_2">2. Don\'t waste time</string>
+    <string name="on_boarding_message_2">Don\'t lose you important time with standing in front of empty shelves!</string>
+    <string name="on_boarding_title_3">3. Help others</string>
+    <string name="on_boarding_message_3">Help others and report what is available.</string>
     <string name="button_continue">Continue</string>
     <string name="get_started">Get started</string>
     <string name="icon_description">small funny icon</string>
     <string name="no_stock_available">no information</string>
     <string name="transmit_successful">Data sent successful</string>
     <string name="transmit_failed">An error occurred during the update</string>
+    <string name="empty">empty</string>
+    <string name="less">less</string>
 </resources>

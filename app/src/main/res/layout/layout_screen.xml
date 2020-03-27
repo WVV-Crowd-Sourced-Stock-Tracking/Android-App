@@ -34,7 +34,7 @@
         android:layout_marginStart="100dp"
         android:layout_marginTop="200dp"
         android:layout_marginEnd="100dp"
-        android:text="@string/onboarding_message_1"
+        android:text="@string/on_boarding_message_1"
         android:textAlignment="center"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
