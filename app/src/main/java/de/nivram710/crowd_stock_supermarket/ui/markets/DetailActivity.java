@@ -180,7 +180,7 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         boolean transmitSuccessful = true;
 
         for (Product product : store.getProducts()) {
-            if (product.getAvailability() < 100) {
+            if (product.getAvailability() <= 100) {
                 CallAPI callAPI = new CallAPI();
                 try {
 
