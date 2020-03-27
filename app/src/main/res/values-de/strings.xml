@@ -28,7 +28,7 @@
     <string name="button_continue">Weiter</string>
     <string name="get_started">Beginnen</string>
     <string name="icon_description">Kleins Bild, zur Veranschaulichung des Textes</string>
-    <string name="no_stock_available">Keine Informationen verfügbar</string>
+    <string name="no_stock_available">Keine Daten</string>
     <string name="transmit_successful">Die Daten wurden erfolgreich gesendet</string>
     <string name="transmit_failed">Es ist ein Fehler aufgetreten</string>
     <string name="empty">leer</string>

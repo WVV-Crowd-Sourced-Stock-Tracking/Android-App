@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
@@ -58,26 +57,40 @@ public class RVPAdapter extends BaseAdapter {
 
         Log.d(TAG, "getView: product: " + product);
 
-        RadioButton radioButton = view.findViewById(R.id.radio_button_status);
-        if (product.getAvailability() > 100) {
-            radioButton.setChecked(true);
-            radioButton.setText(context.getString(R.string.no_stock_available));
-            radioButton.setButtonTintList(ColorStateList.valueOf(context.getColor(R.color.very_dark_gray)));
-        } else if(product.getAvailability() >= 0 && product.getAvailability() <= 33) {
-            radioButton.setChecked(true);
-            radioButton.setText(context.getString(R.string.sold_out));
-        } else if (product.getAvailability() >= 33 && product.getAvailability() <= 66) {
-            radioButton = view.findViewById(R.id.radio_button_status);
-            radioButton.setChecked(true);
-            radioButton.setButtonTintList(ColorStateList.valueOf(context.getColor(R.color.holoOrangeDark)));
-            radioButton.setText(context.getString(R.string.almost_sold_out));
-        } else {
-            radioButton = view.findViewById(R.id.radio_button_status);
-            radioButton.setChecked(true);
-            radioButton.setButtonTintList(ColorStateList.valueOf(context.getColor(R.color.holoGreenLight)));
-            radioButton.setText(context.getString(R.string.available));
-        }
+        // get indicator text views
+        TextView colorIndicator = view.findViewById(R.id.color_indicator_product);
+        TextView textViewIndicator = view.findViewById(R.id.text_view_product_text_indicator);
+
+        // set values for indicator text view
+        colorIndicator.setBackgroundTintList(ColorStateList.valueOf(getIndicatorColor(product.getAvailability())));
+        textViewIndicator.setText(getIndicatorText(product.getAvailability()));
 
         return view;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private int getIndicatorColor(int availability) {
+        if (availability > 0 && availability < 34) {
+            return context.getColor(R.color.holoRedDark);
+        } else if (availability > 33 && availability < 67) {
+            return context.getColor(R.color.holoOrangeDark);
+        } else if (availability > 66 && availability < 101) {
+            return context.getColor(R.color.holoGreenLight);
+        } else {
+            return context.getColor(R.color.darkerGray);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private String getIndicatorText(int availability) {
+        if (availability > 0 && availability < 34) {
+            return context.getString(R.string.empty);
+        } else if (availability > 33 && availability < 67) {
+            return context.getString(R.string.less);
+        } else if (availability > 66 && availability < 101) {
+            return context.getString(R.string.available);
+        } else {
+            return context.getString(R.string.no_stock_available);
+        }
     }
 }
