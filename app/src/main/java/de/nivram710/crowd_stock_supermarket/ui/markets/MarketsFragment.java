@@ -88,8 +88,8 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
         JSONObject data = new JSONObject();
         try {
-            data.put("gps_width", String.valueOf(location.getLatitude()));
-            data.put("gps_length", String.valueOf(location.getLongitude()));
+            data.put("latitude", String.valueOf(location.getLatitude()));
+            data.put("longitude", String.valueOf(location.getLongitude()));
             data.put("radius", 2000);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -115,16 +115,18 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         for (int i = 0; i < jsonStoreArray.length(); i++) {
             try {
                 JSONObject object = (JSONObject) jsonStoreArray.get(i);
-                String id = object.getString("id");
-                String name = object.getString("name");
+                String id = object.getString("market_id");
+                String name = object.getString("market_name");
                 String address = object.getString("street");
                 String city = object.getString("city");
                 double distance = object.getDouble("distance");
-                double latitude = object.getDouble("lat");
-                double longitude = object.getDouble("lng");
-                boolean isOpen = object.getBoolean("open");
+                double latitude = object.getDouble("latitude");
+                double longitude = object.getDouble("longitude");
+//                boolean isOpen = object.getBoolean("open");
 
                 ArrayList<Product> products = generateProductsList(object);
+
+                boolean isOpen = false;
 
                 // add all products to store
                 Store store = new Store(id, name, address, city, distance, latitude, longitude, products, isOpen);
@@ -157,8 +159,8 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
                 // get json attributes and store them in temp variables
                 JSONObject productJsonObject = jsonArray.getJSONObject(i);
-                int id = productJsonObject.getInt("id");
-                String name = productJsonObject.getString("name");
+                int id = productJsonObject.getInt("product_id");
+                String name = productJsonObject.getString("product_name");
                 int availability = productJsonObject.getInt("availability");
 
                 // create product and store it in array list

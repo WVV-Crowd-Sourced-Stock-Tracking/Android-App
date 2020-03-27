@@ -13,8 +13,8 @@ import java.net.URL;
 public class CallAPI extends AsyncTask<String, String, String> {
 
     private static final String REQUEST_METHOD = "POST";
-    private static final int READ_TIMEOUT = 15000;
-    private static final int CONNECTION_TIMEOUT = 15000;
+    private static final int READ_TIMEOUT = 30000;
+    private static final int CONNECTION_TIMEOUT = 30000;
 
     private HttpURLConnection connection;
 

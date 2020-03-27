@@ -21,7 +21,8 @@ import de.nivram710.crowd_stock_supermarket.store.Product;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String REQUEST_URL = "https://wvvcrowdmarket.herokuapp.com/ws/rest";
+    //    public static final String REQUEST_URL = "https://wvvcrowdmarket.herokuapp.com/ws/rest";
+    public static final String REQUEST_URL = "https://wvv2.herokuapp.com/ws/rest";
     public static ArrayList<Product> allAvailableProducts = new ArrayList<>();
     public static int highestID;
 
