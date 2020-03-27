@@ -50,6 +50,10 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
     private Store store;
 
     private ListView listView;
+    private TextView textViewStock;
+    private TextView textViewEmpty;
+    private TextView textViewLess;
+    private TextView textViewEnough;
 
     private static final String TAG = "DetailActivity";
 
@@ -80,6 +84,11 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         assert extras != null;
         store = (Store) extras.getSerializable("store");
         Log.d(TAG, "onCreate: store: " + store);
+
+        textViewStock = findViewById(R.id.text_view_stock);
+        textViewEmpty = findViewById(R.id.text_view_empty);
+        textViewLess = findViewById(R.id.text_view_less);
+        textViewEnough = findViewById(R.id.text_view_enough);
 
         assert store != null;
 
@@ -131,6 +140,11 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
 
         editButton.setImageDrawable(getDrawable(R.drawable.ic_save_white_24dp));
 
+        textViewStock.setVisibility(View.GONE);
+        textViewEmpty.setVisibility(View.VISIBLE);
+        textViewLess.setVisibility(View.VISIBLE);
+        textViewEnough.setVisibility(View.VISIBLE);
+
         RVPEAdapter rvpeAdapter = new RVPEAdapter(this, store.getProducts());
         listView.setAdapter(rvpeAdapter);
 
@@ -142,6 +156,11 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
     private void disableEditMode() {
 
         editButton.setImageDrawable(getDrawable(R.drawable.ic_mode_edit_white_24dp));
+
+        textViewStock.setVisibility(View.VISIBLE);
+        textViewEmpty.setVisibility(View.GONE);
+        textViewLess.setVisibility(View.GONE);
+        textViewEnough.setVisibility(View.GONE);
 
         boolean transmitSuccessful = transmitData();
         if (transmitSuccessful)

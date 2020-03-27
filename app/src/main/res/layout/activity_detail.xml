@@ -83,11 +83,38 @@
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/text_view_stock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/availability" />
+
+        <TextView
+            android:id="@+id/text_view_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".15"
+            android:text="@string/empty"
+            android:textColor="@color/holoRedDark"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/text_view_less"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".15"
+            android:text="@string/less"
+            android:textColor="@color/holoOrangeDark"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/text_view_enough"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".15"
+            android:text="@string/available"
+            android:textColor="@color/holoGreenLight"
+            android:visibility="gone" />
     </LinearLayout>
 
     <ListView
