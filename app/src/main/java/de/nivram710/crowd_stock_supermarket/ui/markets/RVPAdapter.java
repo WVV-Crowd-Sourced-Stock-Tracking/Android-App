@@ -50,11 +50,12 @@ public class RVPAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
         view = View.inflate(context, R.layout.product_layout_view, null);
+        Product product = products.get(position);
 
         TextView textViewName = view.findViewById(R.id.text_view_product_name);
-        textViewName.setText(products.get(position).getName());
+        String productName = !product.getEmoticon().equals("null") ? product.getEmoticon() + " " + product.getName() : product.getName();
+        textViewName.setText(productName);
 
-        Product product = products.get(position);
         Log.d(TAG, "getView: product: " + product);
 
         RadioButton radioButton = view.findViewById(R.id.radio_button_status);

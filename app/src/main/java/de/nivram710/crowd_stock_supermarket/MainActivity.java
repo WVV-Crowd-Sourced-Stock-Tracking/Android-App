@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < allProductsJsonArray.length(); i++) {
                 JSONObject productJsonObject = allProductsJsonArray.getJSONObject(i);
                 allAvailableProducts.add(new Product(productJsonObject.getInt("product_id"),
-                        productJsonObject.getString("product_name"), 101));
+                        productJsonObject.getString("product_name"), productJsonObject.getString("emoji"), 101));
             }
 
             highestID = 0;

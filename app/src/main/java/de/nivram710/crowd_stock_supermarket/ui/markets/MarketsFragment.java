@@ -161,10 +161,11 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
                 JSONObject productJsonObject = jsonArray.getJSONObject(i);
                 int id = productJsonObject.getInt("product_id");
                 String name = productJsonObject.getString("product_name");
+                String emoticon = productJsonObject.getString("emoji");
                 int availability = productJsonObject.getInt("availability");
 
                 // create product and store it in array list
-                Product product = new Product(id, name, availability);
+                Product product = new Product(id, name, emoticon, availability);
                 products.add(product);
             }
 

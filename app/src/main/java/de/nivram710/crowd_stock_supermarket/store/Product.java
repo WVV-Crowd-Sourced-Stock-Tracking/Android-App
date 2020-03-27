@@ -7,11 +7,13 @@ import java.io.Serializable;
 public class Product implements Serializable, Cloneable {
     private int id;
     private String name;
+    private String emoticon;
     private int availability;
 
-    public Product(int id, String name, int availability) {
+    public Product(int id, String name, String emoticon, int availability) {
         this.id = id;
         this.name = name;
+        this.emoticon = emoticon;
         this.availability = availability;
     }
 
@@ -29,6 +31,14 @@ public class Product implements Serializable, Cloneable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmoticon() {
+        return emoticon;
+    }
+
+    public void setEmoticon(String emoticon) {
+        this.emoticon = emoticon;
     }
 
     public int getAvailability() {
