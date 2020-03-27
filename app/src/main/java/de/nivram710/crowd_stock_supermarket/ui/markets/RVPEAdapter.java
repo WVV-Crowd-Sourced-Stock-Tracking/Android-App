@@ -51,13 +51,12 @@ public class RVPEAdapter extends BaseAdapter {
     public View getView(int position, View view, ViewGroup viewGroup) {
         view = View.inflate(context, R.layout.product_layout_edit, null);
 
-        Log.d(TAG, "getView: test");
-        
-        final TextView textViewName = view.findViewById(R.id.text_view_product_name);
-        textViewName.setText(products.get(position).getName());
-
         final Product product = products.get(position);
         Log.d(TAG, "getView: product: " + product);
+
+        TextView textViewName = view.findViewById(R.id.text_view_product_name);
+        String productName = !product.getEmoticon().equals("null") ? product.getEmoticon() + " " + product.getName() : product.getName();
+        textViewName.setText(productName);
 
         RadioGroup radioGroupStock = view.findViewById(R.id.radio_group_stock);
         final View finalView = view;
