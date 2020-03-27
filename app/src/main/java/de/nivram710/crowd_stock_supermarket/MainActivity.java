@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String REQUEST_URL = "https://wvvcrowdmarket.herokuapp.com/ws/rest";
     public static ArrayList<Product> allAvailableProducts = new ArrayList<>();
+    public static int highestID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject productJsonObject = allProductsJsonArray.getJSONObject(i);
                 allAvailableProducts.add(new Product(productJsonObject.getInt("product_id"),
                         productJsonObject.getString("product_name"), 101));
+            }
+
+            highestID = 0;
+            for (Product product : allAvailableProducts) {
+                highestID = Math.max(highestID, product.getId());
             }
 
         } catch (JSONException | ExecutionException | InterruptedException e) {
