@@ -73,8 +73,15 @@ public class IntroActivity extends AppCompatActivity {
                     position++;
                     screenPager.setCurrentItem(position);
                 }
+            }
+        });
 
-                if (position == 3 ) { // mList.size()) {
+        // tablayout add change listener
+        tabIndicator.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 2) {
+                    btnContinue.setText(getString(R.string.begin));
                     btnContinue.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -87,15 +94,19 @@ public class IntroActivity extends AppCompatActivity {
                             savePrefsData();
                         }
                     });
+                } else {
+                    btnContinue.setText(getString(R.string.button_continue));
+                    btnContinue.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            position = screenPager.getCurrentItem();
+                            if (position < 3) { // mList.size()) {
+                                position++;
+                                screenPager.setCurrentItem(position);
+                            }
+                        }
+                    });
                 }
-            }
-        });
-
-        // tablayout add change listener
-        tabIndicator.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-
             }
 
             @Override

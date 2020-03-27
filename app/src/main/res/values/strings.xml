@@ -33,4 +33,5 @@
     <string name="transmit_failed">Es ist ein Fehler aufgetreten</string>
     <string name="empty">leer</string>
     <string name="less">wenig</string>
+    <string name="begin">Beginnen</string>
 </resources>
