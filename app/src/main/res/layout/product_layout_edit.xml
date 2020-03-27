@@ -18,7 +18,7 @@
         android:id="@+id/radio_group_stock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="175dp"
+        android:layout_marginStart="180dp"
         android:layout_marginTop="11dp"
         android:orientation="horizontal"
         android:weightSum="3"
