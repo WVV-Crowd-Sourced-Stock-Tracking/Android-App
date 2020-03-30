@@ -103,7 +103,7 @@ public class RCCAdapter extends BaseAdapter {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private int getIndicatorColor(int availability) {
-        if (availability > 0 && availability < 34) {
+        if (availability >= 0 && availability < 34) {
             return context.getColor(R.color.holoRedDark);
         } else if (availability > 33 && availability < 67) {
             return context.getColor(R.color.holoOrangeDark);
