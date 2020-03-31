@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="de.nivram710.whatsLeft">
+    package="de.whatsLeft">
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -31,7 +31,7 @@
         tools:targetApi="m"
         android:fullBackupContent="true">
         <activity
-            android:name="de.nivram710.whatsLeft.ui.onBoarding.IntroActivity"
+            android:name="de.whatsLeft.ui.onBoarding.IntroActivity"
             android:label="What's Left?">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,9 +40,9 @@
             </intent-filter>
 
         </activity>
-        <activity android:name="de.nivram710.whatsLeft.ui.markets.DetailActivity" />
+        <activity android:name="de.whatsLeft.ui.stores.DetailActivity" />
 
-        <activity android:name="de.nivram710.whatsLeft.MainActivity" />
+        <activity android:name="de.whatsLeft.MainActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
