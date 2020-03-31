@@ -2,7 +2,6 @@
   <img src="./img/WhatsleftLogo.svg" align="right" width="128" height="128" />
   <img src="./img/wirvsviruslogo.png" align="right" width="264" height="128" />
 </h2>
-
 ![wirVsVirus](https://img.shields.io/badge/hackathon-%23WirVsVirus-yellowgreen.svg?style=flat)
 ![Java 11](https://img.shields.io/badge/java-11-blue.svg?style=flat)
 ![android](https://img.shields.io/badge/os-android-green.svg?style=flat)
@@ -22,16 +21,27 @@ Ein Like auf unser Youtube-Video würde uns sehr helfen:
 - [REST-API / Backend](https://github.com/WVV-Crowd-Sourced-Stock-Tracking/Backend)
 - [REST-API / Python-Backend](https://github.com/WVV-Crowd-Sourced-Stock-Tracking/Backend-python)
 
-### Activites
+## Activites
 
 Die Activities sind die grundlegenden Views, mit denen der Nutzer interagiert. Die `MainActivity` oder die `DetialActivity` sind Beispiele für Actvites. Für jede neue größeren Bereich der App wird eine neue Activity genutzt.
 
-### Views
+## Views
 
 In den Activites gibt es verschiedene Views, die unabhänging von den im Hintergrund verarbeiteten `Store`-und `Product`-Objekten sind. So gibt es beispielsweise in der `DetailActivity` eine ListView, die viele SubViews beinhaltet, die ein Produkt durch den gegebenen Namen und der angezeigten Verfügbaren Menge repräsentieren.
 
 Wenn nun Änderungen an den Views vorgenommen werden, werden erst mit klicken des Speichern-Knopfes die Daten ausgewertet und den Produkten zugewiesen. Diese stickte Trennung von Stores, Produkten und Views, also der Trennung von FrontEnd und "Backend", wahrt einerseits die Übersichtlichkeit des Codes und andererseites ermöglicht sie flexible View updates, wenn aktualisiertere Daten vorliegen.
 
-### Kommunitkation mit den Backend
+## Kommunitkation mit den Backend
 
 Die Kommunikation mit den Backend findet über eine REST-API statt. Diese findet über die Klasse `CallAPI` statt. `CallAPI` ist ein `AsyncTask` und nimmt eine URL (String) als ersten und den JSON-Input in Form eines Stringes an. Das zurückgegebene JSONObject kann dann über die Methode `get()` von der `CallAPI` abgefragt werden.
+
+## Screenshots
+
+<p float="left">
+  <img src="./img/screenshot_stores.png" style="zoom:.25;" />
+  <img src="./img/screenshot_detail_view.png" style="zoom:.25;" />
+  <img src="./img/screenshot_edit_mode.png" style="zoom:.25;" /> 
+</p>
+
+
+
