@@ -38,9 +38,9 @@ Die Kommunikation mit den Backend findet über eine REST-API statt. Diese findet
 ## Screenshots
 
 <p float="left">
-  <img src="./img/screenshot_stores.png" style="zoom:.25;" />
-  <img src="./img/screenshot_detail_view.png" style="zoom:.25;" />
-  <img src="./img/screenshot_edit_mode.png" style="zoom:.25;" /> 
+  <img src="./img/screenshot_stores.png" width="256" />
+  <img src="./img/screenshot_detail_view.png" width="256" />
+  <img src="./img/screenshot_edit_mode.png" width="256" /> 
 </p>
 
 
