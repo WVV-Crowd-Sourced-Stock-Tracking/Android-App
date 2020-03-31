@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -22,6 +23,8 @@ public class RCCAdapter extends BaseAdapter {
 
     private Context context;
     private ArrayList<Store> stores;
+
+    private static final String TAG = "RCCAdapter";
 
     RCCAdapter(Context context, ArrayList<Store> stores) {
         this.context = context;
@@ -41,6 +44,17 @@ public class RCCAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    int getPosition(double latitude, double longitude) {
+        for (int i = 0; i < stores.size(); i++) {
+            Store store = stores.get(i);
+            if (store.getLatitude() == latitude && store.getLongitude() == longitude) {
+                Log.d(TAG, "getPosition: position: " + i);
+                return i;
+            }
+        }
+        return -1;
     }
 
     @SuppressLint("ViewHolder")

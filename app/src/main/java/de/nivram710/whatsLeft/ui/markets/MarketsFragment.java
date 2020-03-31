@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -55,6 +56,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
     private GoogleMap mGoogleMap;
     private View mView;
+    private ListView listViewStores;
 
     private boolean mapReady = false;
 
@@ -65,7 +67,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_markets, container, false);
-        ListView listView = mView.findViewById(R.id.store_list_view);
+        listViewStores = mView.findViewById(R.id.store_list_view);
 
         if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
@@ -76,7 +78,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this);
 
         adapter = new RCCAdapter(getContext(), stores);
-        listView.setAdapter(adapter);
+        listViewStores.setAdapter(adapter);
         return mView;
     }
 
@@ -90,7 +92,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         try {
             data.put("latitude", String.valueOf(location.getLatitude()));
             data.put("longitude", String.valueOf(location.getLongitude()));
-            data.put("radius", 2000);
+            data.put("radius", 1000);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -156,7 +158,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
             JSONArray jsonArray = jsonStoreObject.getJSONArray("products");
 
-            for(int i=0; i<jsonArray.length(); i++) {
+            for (int i = 0; i < jsonArray.length(); i++) {
 
                 // get json attributes and store them in temp variables
                 JSONObject productJsonObject = jsonArray.getJSONObject(i);
@@ -232,12 +234,25 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
             mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude))
                     .title(store.getName())
                     .icon(BitmapDescriptorFactory.defaultMarker(hsv[0])));
+
+            mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    double latitude = marker.getPosition().latitude;
+                    double longitude = marker.getPosition().longitude;
+
+                    int position = adapter.getPosition(latitude, longitude);
+
+                    listViewStores.smoothScrollToPositionFromTop(position, 20);
+                    return false;
+                }
+            });
         }
 
         // update camera
         if (lastKnownLocation != null) {
             LatLng lastKnownLocationLatLgn = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-            CameraPosition position = new CameraPosition(lastKnownLocationLatLgn, 13f, 0f, 0f);
+            CameraPosition position = new CameraPosition(lastKnownLocationLatLgn, 12.5f, 0f, 0f);
             if (mapReady) mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
         }
 
