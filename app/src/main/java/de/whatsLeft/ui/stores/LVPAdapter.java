@@ -1,4 +1,4 @@
-package de.nivram710.whatsLeft.ui.markets;
+package de.whatsLeft.ui.stores;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -14,17 +14,34 @@ import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 
-import de.nivram710.whatsLeft.R;
-import de.nivram710.whatsLeft.store.Product;
+import de.whatsLeft.R;
+import de.whatsLeft.store.Product;
 
-public class RVPAdapter extends BaseAdapter {
+/**
+ * LVPAdapter --> ListViewProductsAdapter
+ * Class to manage the products in DetailActivity in view mode
+ *
+ * @see DetailActivity
+ *
+ * @since 1.0.0
+ * @author Marvin Jütte
+ * @version 1.0
+ */
+public class LVPAdapter extends BaseAdapter {
 
-    private static final String TAG = "RVPAdapter";
+    private static final String TAG = "LVPAdapter";
 
     private Context context;
     private ArrayList<Product> products;
 
-    RVPAdapter(Context context, ArrayList<Product> products) {
+    /**
+     * Constructor
+     *
+     * @param context context to access view
+     * @param products array list containing all products to display them in list
+     * @since 1.0.0
+     */
+    LVPAdapter(Context context, ArrayList<Product> products) {
         this.context = context;
         this.products = products;
     }
@@ -49,48 +66,29 @@ public class RVPAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
         view = View.inflate(context, R.layout.product_layout_view, null);
+
+        // get current product
         Product product = products.get(position);
 
+        // display product name with emoticon if there is one
         TextView textViewName = view.findViewById(R.id.text_view_product_name);
         String productName = !product.getEmoticon().equals("null") ? product.getEmoticon() + " " + product.getName() : product.getName();
         textViewName.setText(productName);
 
+        // log product
         Log.d(TAG, "getView: product: " + product);
 
         // get indicator text views
         TextView colorIndicator = view.findViewById(R.id.color_indicator_product);
         TextView textViewIndicator = view.findViewById(R.id.text_view_product_text_indicator);
 
+        // create new IndicatorUtils object
+        IndicatorUtils indicatorUtils = new IndicatorUtils(context);
+
         // set values for indicator text view
-        colorIndicator.setBackgroundTintList(ColorStateList.valueOf(getIndicatorColor(product.getAvailability())));
-        textViewIndicator.setText(getIndicatorText(product.getAvailability()));
+        colorIndicator.setBackgroundTintList(ColorStateList.valueOf(indicatorUtils.getIndicatorColor(product)));
+        textViewIndicator.setText(indicatorUtils.getIndicatorText(product));
 
         return view;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private int getIndicatorColor(int availability) {
-        if (availability >= 0 && availability < 34) {
-            return context.getColor(R.color.holoRedDark);
-        } else if (availability > 33 && availability < 67) {
-            return context.getColor(R.color.holoOrangeDark);
-        } else if (availability > 66 && availability < 101) {
-            return context.getColor(R.color.holoGreenLight);
-        } else {
-            return context.getColor(R.color.darkerGray);
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private String getIndicatorText(int availability) {
-        if (availability >= 0 && availability < 34) {
-            return context.getString(R.string.empty);
-        } else if (availability > 33 && availability < 67) {
-            return context.getString(R.string.less);
-        } else if (availability > 66 && availability < 101) {
-            return context.getString(R.string.available);
-        } else {
-            return context.getString(R.string.no_stock_available);
-        }
     }
 }

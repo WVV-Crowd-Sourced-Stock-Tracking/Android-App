@@ -1,4 +1,4 @@
-package de.nivram710.whatsLeft.ui.onBoarding;
+package de.whatsLeft.ui.onBoarding;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -13,8 +13,17 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import java.util.List;
 
-import de.nivram710.whatsLeft.R;
+import de.whatsLeft.R;
 
+/**
+ * Adapter to manage displayed data on IntroActivity
+ *
+ * @see IntroActivity
+ *
+ * @since 1.0.0
+ * @author Chris de Machaut
+ * @version 1.0
+ */
 public class IntroViewPagerAdapter extends PagerAdapter {
 
     private Context mContext;

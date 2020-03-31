@@ -1,4 +1,4 @@
-package de.nivram710.whatsLeft.ui.markets;
+package de.whatsLeft.ui.stores;
 
 import android.Manifest;
 import android.content.Context;
@@ -39,17 +39,23 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
-import de.nivram710.whatsLeft.MainActivity;
-import de.nivram710.whatsLeft.R;
-import de.nivram710.whatsLeft.connectivity.CallAPI;
-import de.nivram710.whatsLeft.store.Product;
-import de.nivram710.whatsLeft.store.ProductComparator;
-import de.nivram710.whatsLeft.store.Store;
+import de.whatsLeft.MainActivity;
+import de.whatsLeft.R;
+import de.whatsLeft.connectivity.CallAPI;
+import de.whatsLeft.store.Store;
 
+/**
+ * Fragment to display nearby stores and show their position on map
+ * <p>Stores in listView are managed by the LVSAdapter</p>
+ * @see LVSAdapter
+ *
+ * @since 1.0.0
+ * @author Marvin Jütte
+ * @version 1.0
+ */
 public class MarketsFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 
     private static final String TAG = "MarketsFragment";
@@ -63,140 +69,90 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
     private Location lastKnownLocation;
 
     private ArrayList<Store> stores = new ArrayList<>();
-    private RCCAdapter adapter;
+    private LVSAdapter adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_markets, container, false);
         listViewStores = mView.findViewById(R.id.store_list_view);
 
+        // check if app has permission to access fine location of user
         if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // if app has not the permission ask the user to grant it
             ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
         }
 
+        // setup location manager to request user moving updates
         LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         assert locationManager != null;
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this);
 
-        adapter = new RCCAdapter(getContext(), stores);
+        // setup card view adapter to process all available stores and display them as cards in the list view
+        adapter = new LVSAdapter(getContext(), stores);
         listViewStores.setAdapter(adapter);
+
+
         return mView;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    /**
+     * Requests all available stores in a radius of 1000m around the current location from backend
+     *
+     * @param location Location; object which contains the current location of the user
+     * @since 1.0.0
+     */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void requestStores(Location location) {
 
+        // create CallAPI object, to connect to backend
         CallAPI callAPI = new CallAPI();
-        String result = null;
 
+        // create new String object to store result
+        String result;
+
+        // create new input json object for request
         JSONObject data = new JSONObject();
         try {
+            // put all required information by the backend into input data json object
             data.put("latitude", String.valueOf(location.getLatitude()));
             data.put("longitude", String.valueOf(location.getLongitude()));
             data.put("radius", 1000);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
-        try {
+            // connect to backend and store result in result string
             result = callAPI.execute(MainActivity.REQUEST_URL + "/market/scrape", data.toString()).get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
 
-        JSONObject jsonResult;
-        JSONArray jsonStoreArray = null;
-        try {
+            // create json Object from result string if result string does not equal null
             assert result != null;
-            jsonResult = new JSONObject(result);
-            jsonStoreArray = jsonResult.getJSONArray("supermarket");
-        } catch (JSONException e) {
+            JSONObject jsonResult = new JSONObject(result);
+
+            // get jsonStoreArray from result json object
+            JSONArray jsonStoreArray = jsonResult.getJSONArray("supermarket");
+
+            // loop through jsonStoreArray and create store objects
+            for (int i=0; i<jsonStoreArray.length(); i++) {
+                // add store to stores array list
+                stores.add(MainActivity.generateStoreFromJsonObject(jsonStoreArray.getJSONObject(i)));
+            }
+
+            Log.d(TAG, "requestStores: stores: " + stores);
+        } catch (JSONException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
 
-        assert jsonStoreArray != null;
-        for (int i = 0; i < jsonStoreArray.length(); i++) {
-            try {
-                JSONObject object = (JSONObject) jsonStoreArray.get(i);
-                String id = object.getString("market_id");
-                String name = object.getString("market_name");
-                String address = object.getString("street");
-                String city = object.getString("city");
-                double distance = object.getDouble("distance");
-                double latitude = object.getDouble("latitude");
-                double longitude = object.getDouble("longitude");
-//                boolean isOpen = object.getBoolean("open");
-
-                ArrayList<Product> products = generateProductsList(object);
-
-                boolean isOpen = false;
-
-                // add all products to store
-                Store store = new Store(id, name, address, city, distance, latitude, longitude, products, isOpen);
-
-                // sort products after stock
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    products.sort(new ProductComparator());
-                }
-
-                Log.d(TAG, "requestStores: store created: " + store.toString());
-                stores.add(store);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+        // inform adapter that data has changed
         adapter.notifyDataSetChanged();
+
+        // display stores if map is ready
         if (mapReady) displayStores();
+
+        // log all stores
         Log.i(TAG, "requestStores: stores: " + stores);
-    }
-
-    private ArrayList<Product> generateProductsList(JSONObject jsonStoreObject) {
-        ArrayList<Product> products = new ArrayList<>();
-        boolean[] productsInList = new boolean[MainActivity.highestID + 1];
-        Arrays.fill(productsInList, Boolean.FALSE);
-
-        try {
-
-            JSONArray jsonArray = jsonStoreObject.getJSONArray("products");
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-
-                // get json attributes and store them in temp variables
-                JSONObject productJsonObject = jsonArray.getJSONObject(i);
-                int id = productJsonObject.getInt("product_id");
-                String name = productJsonObject.getString("product_name");
-                String emoticon = productJsonObject.getString("emoji");
-                int availability = productJsonObject.getInt("availability");
-
-                // create product and store it in array list
-                Product product = new Product(id, name, emoticon, availability);
-                products.add(product);
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        for (Product product : products) {
-            productsInList[product.getId()] = true;
-        }
-
-        for (Product product : MainActivity.allAvailableProducts) {
-            if (!productsInList[product.getId()]) {
-                try {
-                    products.add((Product) product.clone());
-                } catch (CloneNotSupportedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return products;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // setup google map view
         MapView mapView = mView.findViewById(R.id.map);
         if (mapView != null) {
             mapView.onCreate(null);
@@ -221,44 +177,73 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         displayStores();
     }
 
+    /**
+     * Add markers for every store on map
+     *
+     * @since 1.0.0
+     */
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void displayStores() {
 
+        // set up color marker
+        float[] hsv = new float[3];
+        Color.colorToHSV(Objects.requireNonNull(getContext()).getColor(R.color.darkBlue), hsv);
+
+        // loop through all stores
         for (Store store : stores) {
+
+            // get latitude and longitude from store
             double latitude = store.getLatitude();
             double longitude = store.getLongitude();
 
-            float[] hsv = new float[3];
-            Color.colorToHSV(Objects.requireNonNull(getContext()).getColor(R.color.darkBlue), hsv);
-
+            // add new marker which represents the current store on map
             mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude))
                     .title(store.getName())
                     .icon(BitmapDescriptorFactory.defaultMarker(hsv[0])));
 
+            // create on click listener for marker
             mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
+
+                    // get latitude and longitude from maker
                     double latitude = marker.getPosition().latitude;
                     double longitude = marker.getPosition().longitude;
 
+                    // find position for market at this location
                     int position = adapter.getPosition(latitude, longitude);
 
+                    // scroll in list view to position of store
                     listViewStores.smoothScrollToPositionFromTop(position, 20);
-                    return false;
+                    return true;
                 }
             });
         }
 
-        // update camera
-        if (lastKnownLocation != null) {
-            LatLng lastKnownLocationLatLgn = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-            CameraPosition position = new CameraPosition(lastKnownLocationLatLgn, 12.5f, 0f, 0f);
-            if (mapReady) mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
-        }
+        updateCamera();
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    /**
+     * Updates the camera's position
+     *
+     * @since 1.0.0
+     */
+    private void updateCamera() {
+
+        // check if lastKnownLocation is null or not
+        if (lastKnownLocation != null) {
+
+            // set camera position
+            LatLng lastKnownLocationLatLgn = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+            CameraPosition position = new CameraPosition(lastKnownLocationLatLgn, 12.5f, 0f, 0f);
+
+            // if map is ready move to camera to new position
+            if (mapReady) mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onLocationChanged(Location location) {
         // update store lists

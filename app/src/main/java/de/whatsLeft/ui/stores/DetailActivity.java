@@ -1,4 +1,4 @@
-package de.nivram710.whatsLeft.ui.markets;
+package de.whatsLeft.ui.stores;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -33,13 +33,28 @@ import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
 
-import de.nivram710.whatsLeft.MainActivity;
-import de.nivram710.whatsLeft.R;
-import de.nivram710.whatsLeft.connectivity.CallAPI;
-import de.nivram710.whatsLeft.store.Product;
-import de.nivram710.whatsLeft.store.ProductComparator;
-import de.nivram710.whatsLeft.store.Store;
+import de.whatsLeft.MainActivity;
+import de.whatsLeft.R;
+import de.whatsLeft.connectivity.CallAPI;
+import de.whatsLeft.store.Product;
+import de.whatsLeft.store.ProductComparator;
+import de.whatsLeft.store.Store;
 
+/**
+ * Activity to show the details including all products and their availability of a store
+ * <p>This Activity has a view mode and a edit mode. In view mode the products and their availabilities
+ * are just display while in edit mode the user is able to update the products stock</p>
+ *
+ * <p>Products in listView are managed by LVPAdapter or LVPEAdapter whether the edit mode is enabled
+ * or nor</p>
+ *
+ * @see LVPAdapter
+ * @see LVPEAdapter
+ *
+ * @since 1.0.0
+ * @author Marvin Jütte
+ * @version 1.0
+ */
 public class DetailActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
     private GoogleMap mGoogleMap;
@@ -118,7 +133,7 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
 
         // setup adapter for listView
         listView = findViewById(R.id.list_view_products);
-        RVPAdapter adapter = new RVPAdapter(this, store.getProducts());
+        LVPAdapter adapter = new LVPAdapter(this, store.getProducts());
         listView.setAdapter(adapter);
 
 
@@ -136,44 +151,72 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
 
     }
 
+    /**
+     * This method sets everything up for the edit mode and enables it
+     *
+     * @since 1.0.0
+     */
     private void enableEditMode() {
 
+        // change icon from floating action button to save icon
         editButton.setImageDrawable(getDrawable(R.drawable.ic_save_white_24dp));
 
+        // hide text view to indicate that in this column the stock data is displayed
         textViewStock.setVisibility(View.GONE);
+
+        // show text views which explain what each radio button and color stands for
         textViewEmpty.setVisibility(View.VISIBLE);
         textViewLess.setVisibility(View.VISIBLE);
         textViewEnough.setVisibility(View.VISIBLE);
 
-        RVPEAdapter rvpeAdapter = new RVPEAdapter(this, store.getProducts());
-        listView.setAdapter(rvpeAdapter);
+        // create new LVPEAdapter and set this as the list view's adapter
+        LVPEAdapter lvpeAdapter = new LVPEAdapter(this, store.getProducts());
+        listView.setAdapter(lvpeAdapter);
 
+        // log that edit mode was enabled successfully and set editModeEnabled to true
         Log.i(TAG, "enableEditMode: editMode initiated successfully");
         editModeEnabled = true;
     }
 
+    /** This method sets everything up for the view mode and disables edit mode
+     *
+     * @since 1.0.0
+     */
     private void disableEditMode() {
 
+        // change icon of floating action button to edit icon
         editButton.setImageDrawable(getDrawable(R.drawable.ic_mode_edit_white_24dp));
 
-        textViewStock.setVisibility(View.VISIBLE);
+        // hide explanation of radio buttons and color
         textViewEmpty.setVisibility(View.GONE);
         textViewLess.setVisibility(View.GONE);
         textViewEnough.setVisibility(View.GONE);
 
+        // show that this column show data about stock
+        textViewStock.setVisibility(View.VISIBLE);
+
+        // transmit data to backend
         boolean transmitSuccessful = transmitData();
-        if (transmitSuccessful)
-            Toast.makeText(this, getString(R.string.transmit_successful), Toast.LENGTH_LONG).show();
+
+        // tell the user whether the transmit to backend was successful or not
+        if (transmitSuccessful) Toast.makeText(this, getString(R.string.transmit_successful), Toast.LENGTH_LONG).show();
         else Toast.makeText(this, getString(R.string.transmit_failed), Toast.LENGTH_LONG).show();
 
-        RVPAdapter rvpAdapter = new RVPAdapter(this, store.getProducts());
-        listView.setAdapter(rvpAdapter);
+        // create new object of LVPVAdapter and set it as listView's adapter
+        LVPAdapter lvpAdapter = new LVPAdapter(this, store.getProducts());
+        listView.setAdapter(lvpAdapter);
 
-
+        // log that edit mode was disabled successful and set editModeEnabled to false
         Log.i(TAG, "disableEditMode: edit mode closed successfully");
         editModeEnabled = false;
     }
 
+    /**
+     * Transmit updated product stock to backend
+     *
+     * @return wasSuccessful boolean; return whether the transmit was successful or not
+     * @since 1.0.0
+     */
     private boolean transmitData() {
 
         boolean transmitSuccessful = true;
@@ -204,15 +247,17 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
     @Override
     public void onLocationChanged(Location location) {
 
+        // store location as lastKnownLocation
         lastKnownLocation = location;
 
-        // update camera
+        // update camera so user does not ran out of map
         if (location != null) {
             LatLng lastKnownLocationLatLgn = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
             CameraPosition position = new CameraPosition(lastKnownLocationLatLgn, 13f, 0f, 0f);
             if (mapReady) mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
         }
 
+        // log location
         assert location != null;
         Log.d(TAG, "onLocationChanged: location: " + location.getLatitude() + "; " + location.getLongitude());
     }
@@ -236,30 +281,36 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
+        // setup google map view
         mGoogleMap = googleMap;
         mGoogleMap.setMyLocationEnabled(true);
         mGoogleMap.setMapStyle(new MapStyleOptions(getResources().getString(R.string.style_json)));
+        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
+        // setup color for store markers
         float[] hsv = new float[3];
         Color.colorToHSV(getColor(R.color.darkBlue), hsv);
 
+        // log the coordinates of store
         Log.d(TAG, "onMapReady: latitude: " + store.getLatitude());
         Log.d(TAG, "onMapReady: longitude: " + store.getLongitude());
 
+        // add marker for the store on map
         mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(store.getLatitude(), store.getLongitude()))
                 .title(store.getName())
                 .icon(BitmapDescriptorFactory.defaultMarker(hsv[0])));
-        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
+        // log lastKnownLocation
         Log.d(TAG, "onMapReady: lastKnownLocation: " + lastKnownLocation);
 
-        // update camera
+        // set camera to display current location and store location
         if (lastKnownLocation != null) {
             LatLng lastKnownLocationLatLgn = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
             CameraPosition position = new CameraPosition(lastKnownLocationLatLgn, 13f, 0f, 0f);
             if (mapReady) mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
         }
 
+        // set mapReady to true;
         mapReady = true;
     }
 }

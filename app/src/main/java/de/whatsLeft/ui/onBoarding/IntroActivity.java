@@ -1,4 +1,4 @@
-package de.nivram710.whatsLeft.ui.onBoarding;
+package de.whatsLeft.ui.onBoarding;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,9 +16,19 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.nivram710.whatsLeft.MainActivity;
-import de.nivram710.whatsLeft.R;
+import de.whatsLeft.MainActivity;
+import de.whatsLeft.R;
 
+/**
+ * Activity for user on boarding
+ * <p>Displayed data is manged by IntroViewPagerAdapter</p>
+ *
+ * @see IntroViewPagerAdapter
+ *
+ * @since 1.0.0
+ * @author Chris de Machaut
+ * @version 1.0
+ */
 public class IntroActivity extends AppCompatActivity {
 
     private ViewPager screenPager;
@@ -122,16 +132,37 @@ public class IntroActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * This method returns whether the on boarding screen has already been displayed
+     *
+     * @return isIntroOpened boolean; if true no need to display on boarding screen again
+     * @since 1.0.0
+     */
     private boolean restorePrefData() {
+        // load sharedPreferences
         SharedPreferences pref = getApplicationContext().getSharedPreferences("myPrefs", MODE_PRIVATE);
+
+        // return saved boolean from sharedPreferences
         return pref.getBoolean("isIntroOpened", false);
     }
 
+    /**
+     * set the field isIntroOpened to true in sharedPreferences
+     *
+     * @since 1.0.0
+     */
     private void savePrefsData() {
 
+        // load sharedPreferences
         SharedPreferences pref = getApplicationContext().getSharedPreferences("myPrefs", MODE_PRIVATE);
+
+        // open sharedPreferences editor
         SharedPreferences.Editor editor = pref.edit();
+
+        // store true in isIntroOpened to indicate that there is no need to display on boarding again
         editor.putBoolean("isIntroOpened", true);
+
+        // save changes in sharedPreferences
         editor.apply();
     }
 

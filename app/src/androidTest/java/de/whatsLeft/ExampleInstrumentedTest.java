@@ -1,4 +1,4 @@
-package de.nivram710.whatsLeft;
+package de.whatsLeft;
 
 import android.content.Context;
 

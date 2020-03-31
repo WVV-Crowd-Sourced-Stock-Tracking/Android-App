@@ -1,8 +1,15 @@
-package de.nivram710.whatsLeft.store;
+package de.whatsLeft.store;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Class to represent single stores
+ *
+ * @since 1.0.0
+ * @author Marvin Jütte
+ * @version 1.0
+ */
 public class Store implements Serializable {
 
     private String id;
@@ -15,6 +22,19 @@ public class Store implements Serializable {
     private ArrayList<Product> products;
     private boolean isOpen;
 
+    /**
+     * Constructor
+     *
+     * @param id        store id from backend
+     * @param name      store name
+     * @param address   address of store
+     * @param city      city of store
+     * @param distance  distance between request location and store
+     * @param latitude  latitude of store's position
+     * @param longitude longitude of store's position
+     * @param products  array list containing all products
+     * @param isOpen    boolean representing if current store is open
+     */
     public Store(String id, String name, String address, String city, double distance, double latitude, double longitude, ArrayList<Product> products, boolean isOpen) {
         this.id = id;
         this.name = name;
@@ -27,76 +47,75 @@ public class Store implements Serializable {
         this.isOpen = isOpen;
     }
 
+    /**
+     * @return storeID store id from backend
+     * @since 1.0.0
+     */
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
+    /**
+     * @return name
+     * @since 1.0.0
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @return address
+     * @since 1.0.0
+     */
     public String getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
+    /**
+     * @return city
+     * @since 1.0.0
+     */
     public String getCity() {
         return city;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
+    /**
+     * @return distance
+     * @since 1.0.0
+     */
     public double getDistance() {
         return distance;
     }
 
-    public void setDistance(double distance) {
-        this.distance = distance;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    /**
+     * @return latitude latitude of the stores position
+     * @since 1.0.0
+     */
     public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
+    /**
+     * @return longitude longitude of the stores position
+     * @since 1.0.0
+     */
     public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
+    /**
+     * @return products array list containing all products
+     * @since 1.0.0
+     */
     public ArrayList<Product> getProducts() {
         return products;
     }
 
-    public void addProduct(Product product) {
-        this.products.add(product);
-    }
-
+    /**
+     * @return isOpen true if the store is open; false if the store is closed
+     */
     public boolean isOpen() {
         return isOpen;
-    }
-
-    public void setOpen(boolean open) {
-        isOpen = open;
     }
 
     @Override

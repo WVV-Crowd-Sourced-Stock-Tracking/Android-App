@@ -1,4 +1,4 @@
-package de.nivram710.whatsLeft.connectivity;
+package de.whatsLeft.connectivity;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -10,6 +10,13 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * This class is responsible for the communication with the REST backend
+ *
+ * @since 1.0.0
+ * @author Marvin Jütte
+ * @version 1.0
+ */
 public class CallAPI extends AsyncTask<String, String, String> {
 
     private static final String REQUEST_METHOD = "POST";
@@ -23,10 +30,17 @@ public class CallAPI extends AsyncTask<String, String, String> {
     @Override
     protected String doInBackground(String... strings) {
         Log.d(TAG, "doInBackground: called");
+
+        // first parameter is request url
         String requestUrlString = strings[0];
+
+        // second parameter is input string (best case the string is a json object)
         String data = strings[1];
+
+        // default successful is failed
         String result = "failed";
 
+        // log request url and input data
         Log.i(TAG, "doInBackground: requestUrlString: " + requestUrlString);
         Log.i(TAG, "doInBackground: data: " + data);
 
@@ -46,6 +60,7 @@ public class CallAPI extends AsyncTask<String, String, String> {
             connection.setUseCaches(true);
             connection.setRequestProperty("Content-Type", "application/json");
 
+            // add input data to connection
             OutputStreamWriter streamWriter = new OutputStreamWriter(connection.getOutputStream());
             streamWriter.write(data);
             streamWriter.flush();
@@ -53,23 +68,31 @@ public class CallAPI extends AsyncTask<String, String, String> {
             // connect to url
             connection.connect();
 
+            // save response from backend
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder stringBuilder = new StringBuilder();
             String line;
+
+            // read response from backend
             while((line = reader.readLine()) != null) {
                 stringBuilder.append(line).append("\n");
             }
 
+            // close reader
             reader.close();
+
+            // store everything in result string
             result = stringBuilder.toString();
 
 
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+            // disconnect from backend
             connection.disconnect();
         }
 
+        // log if communication to backend was successful and the backend's response
         Log.i(TAG, "doInBackground: result: " + result);
         return result;
     }
