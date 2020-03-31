@@ -31,7 +31,7 @@
     <string name="no_stock_available">Keine Daten</string>
     <string name="transmit_successful">Die Daten wurden erfolgreich gesendet</string>
     <string name="transmit_failed">Es ist ein Fehler aufgetreten</string>
-    <string name="empty">leer</string>
+    <string name="empty">ausverkauft</string>
     <string name="less">wenig</string>
     <string name="begin">Beginnen</string>
 </resources>

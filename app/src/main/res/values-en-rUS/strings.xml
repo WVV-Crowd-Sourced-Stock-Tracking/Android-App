@@ -31,7 +31,7 @@
     <string name="no_stock_available">no information</string>
     <string name="transmit_successful">Data sent successful</string>
     <string name="transmit_failed">An error occurred during the update</string>
-    <string name="empty">empty</string>
+    <string name="empty">out of stock</string>
     <string name="less">less</string>
     <string name="begin">Let\'s get started</string>
 </resources>
