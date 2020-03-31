@@ -70,10 +70,11 @@ public class RVPEAdapter extends BaseAdapter {
                 TextView textViewProductName = finalView.findViewById(R.id.text_view_product_name);
                 String productName = (String) textViewProductName.getText();
                 Log.d(TAG, "onCheckedChanged: productName: " + productName);
+                Log.d(TAG, "onCheckedChanged: radioID: " + radioID);
 
                 if(radioID == 0) {
                     for(Product product1 : products) {
-                        if(product1.getName().equals(productName)){
+                        if (product1.getName().equals(productName.split(" ")[1].trim())) {
                             product1.setAvailability(0);
                             Log.d(TAG, "onCheckedChanged: updated product: " + product1);
                             break;
@@ -81,7 +82,7 @@ public class RVPEAdapter extends BaseAdapter {
                     }
                 } else if(radioID == 1) {
                     for(Product product1 : products) {
-                        if(product1.getName().equals(productName)){
+                        if (product1.getName().equals(productName.split(" ")[1].trim())) {
                             product1.setAvailability(50);
                             Log.d(TAG, "onCheckedChanged: updated product: " + product1);
                             break;
@@ -89,7 +90,7 @@ public class RVPEAdapter extends BaseAdapter {
                     }
                 } else if(radioID == 2) {
                     for(Product product1 :products) {
-                        if(product1.getName().equals(productName)) {
+                        if (product1.getName().equals(productName.split(" ")[1].trim())) {
                             product1.setAvailability(100);
                             Log.d(TAG, "onCheckedChanged: updated product: " + product1);
                             break;
