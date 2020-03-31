@@ -83,7 +83,7 @@ public class RVPAdapter extends BaseAdapter {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private String getIndicatorText(int availability) {
-        if (availability > 0 && availability < 34) {
+        if (availability >= 0 && availability < 34) {
             return context.getString(R.string.empty);
         } else if (availability > 33 && availability < 67) {
             return context.getString(R.string.less);
