@@ -1,5 +1,7 @@
 package de.whatsLeft.store;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -118,6 +120,7 @@ public class Store implements Serializable {
         return isOpen;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Store{" +
