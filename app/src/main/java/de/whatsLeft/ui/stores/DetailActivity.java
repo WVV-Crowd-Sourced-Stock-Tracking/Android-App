@@ -53,7 +53,7 @@ import de.whatsLeft.store.Store;
  *
  * @since 1.0.0
  * @author Marvin Jütte
- * @version 1.0
+ * @version 1.1
  */
 public class DetailActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
 
@@ -117,15 +117,13 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         String addressString = store.getAddress() + ", " + store.getCity() + " - " + MainActivity.getFormattedDistance(store.getDistance());
         textViewStoreAddress.setText(addressString);
 
+        // create new IndicatorUtils object
+        IndicatorUtils indicatorUtils = new IndicatorUtils(this);
+
         // display is open status
         TextView textViewIsOpen = findViewById(R.id.text_view_is_open);
-        if (store.isOpen()) {
-            textViewIsOpen.setText(getString(R.string.store_is_open));
-            textViewIsOpen.setTextColor(getColor(R.color.holoGreenLight));
-        } else {
-            textViewIsOpen.setText(getString(R.string.store_is_closed));
-            textViewIsOpen.setTextColor(getColor(R.color.holoRedDark));
-        }
+        textViewIsOpen.setTextColor(indicatorUtils.getStoreOpenTextColor(store));
+        textViewIsOpen.setText(indicatorUtils.getStoreOpenText(store));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             store.getProducts().sort(new ProductComparator());

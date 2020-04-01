@@ -4,13 +4,14 @@ import androidx.annotation.NonNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Class to represent single stores
  *
  * @since 1.0.0
  * @author Marvin Jütte
- * @version 1.0
+ * @version 1.1
  */
 public class Store implements Serializable {
 
@@ -22,7 +23,9 @@ public class Store implements Serializable {
     private double latitude;
     private double longitude;
     private ArrayList<Product> products;
-    private boolean isOpen;
+    private boolean openingToday;
+    private Date openingDate;
+    private Date closingDate;
 
     /**
      * Constructor
@@ -35,9 +38,10 @@ public class Store implements Serializable {
      * @param latitude  latitude of store's position
      * @param longitude longitude of store's position
      * @param products  array list containing all products
-     * @param isOpen    boolean representing if current store is open
+     * @param openingToday boolean if the store opens at current day
+     * @since 1.0.0
      */
-    public Store(String id, String name, String address, String city, double distance, double latitude, double longitude, ArrayList<Product> products, boolean isOpen) {
+    public Store(String id, String name, String address, String city, double distance, double latitude, double longitude, ArrayList<Product> products, boolean openingToday) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -46,7 +50,35 @@ public class Store implements Serializable {
         this.latitude = latitude;
         this.longitude = longitude;
         this.products = products;
-        this.isOpen = isOpen;
+        this.openingToday = openingToday;
+    }
+
+    /**
+     * Constructor
+     *
+     * @param id        store id from backend
+     * @param name      store name
+     * @param address   address of store
+     * @param city      city of store
+     * @param distance  distance between request location and store
+     * @param latitude  latitude of store's position
+     * @param longitude longitude of store's position
+     * @param products  array list containing all products
+     * @param openingToday boolean if the store opens at current day
+     * @since 1.0.0
+     */
+    public Store(String id, String name, String address, String city, double distance, double latitude, double longitude, ArrayList<Product> products, boolean openingToday, Date openingDate, Date closingDate) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.city = city;
+        this.distance = distance;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.products = products;
+        this.openingToday = openingToday;
+        this.openingDate = openingDate;
+        this.closingDate = closingDate;
     }
 
     /**
@@ -114,10 +146,27 @@ public class Store implements Serializable {
     }
 
     /**
-     * @return isOpen true if the store is open; false if the store is closed
+     * @return openingToday true, if store opens at current day false if not
+     * @since 1.0.0
      */
-    public boolean isOpen() {
-        return isOpen;
+    public boolean isOpeningToday() {
+        return openingToday;
+    }
+
+    /**
+     * @return openingDate
+     * @since 1.0.0
+     */
+    public Date getOpeningDate() {
+        return openingDate;
+    }
+
+    /**
+     * @return closingDate
+     * @since 1.0.0
+     */
+    public Date getClosingDate() {
+        return closingDate;
     }
 
     @NonNull
@@ -129,7 +178,7 @@ public class Store implements Serializable {
                 ", address='" + address + '\'' +
                 ", distance=" + distance +
                 ", products=" + products +
-                ", isOpen=" + isOpen +
+                ", openingToday=" + openingToday +
                 '}';
     }
 }

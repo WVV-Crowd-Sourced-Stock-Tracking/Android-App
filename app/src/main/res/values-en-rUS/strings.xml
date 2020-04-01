@@ -34,4 +34,6 @@
     <string name="empty">out of stock</string>
     <string name="less">less</string>
     <string name="begin">Let\'s get started</string>
+    <string name="opens_at">open at</string>
+    <string name="store_is_closing_at">closing at</string>
 </resources>

@@ -6,7 +6,6 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.leanback.animation.LogDecelerateInterpolator;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
@@ -19,6 +18,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import de.whatsLeft.connectivity.CallAPI;
@@ -106,6 +107,10 @@ public class MainActivity extends AppCompatActivity {
      */
     @RequiresApi(api = Build.VERSION_CODES.N)
     public static Store generateStoreFromJsonObject(JSONObject jsonStoreObject) {
+
+        // create empty store object
+        Store store;
+
         try {
             // get store attributes from json object
             String id = jsonStoreObject.getString("market_id");
@@ -116,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
             double latitude = jsonStoreObject.getDouble("latitude");
             double longitude = jsonStoreObject.getDouble("longitude");
             JSONArray jsonProductArray = jsonStoreObject.getJSONArray("products");
+            JSONArray jsonPeriodsArray = jsonStoreObject.getJSONArray("periods");
 
             // generate product from current json object in products array list
             ArrayList<Product> products = generateProductsList(jsonProductArray);
@@ -123,9 +129,29 @@ public class MainActivity extends AppCompatActivity {
             // sort products list
             products.sort(new ProductComparator());
 
-            // create new Store object 
-            Store store = new Store(id, name, address, city, distance, latitude, longitude, products, false);
-            
+            // look if store opens today
+            int indexOfCurrentPeriod = TimeUtils.findPeriodForCurrentDay(jsonPeriodsArray);
+
+            // if no openingDayId was found the store is closed for this day
+            boolean openingToday = indexOfCurrentPeriod != -1;
+
+            if(openingToday && jsonPeriodsArray.length() > 0) {
+
+                // get period object for current day
+                JSONObject jsonPeriodObject = jsonPeriodsArray.getJSONObject(indexOfCurrentPeriod);
+
+                Date openingDate = TimeUtils.generateDateFromPeriods(jsonPeriodObject, false);
+                Date closingDate = TimeUtils.generateDateFromPeriods(jsonPeriodObject, true);
+
+                // create new Store object
+                store = new Store(id, name, address, city, distance, latitude, longitude, products, true, openingDate, closingDate);
+
+            } else {
+                // create new Store object
+                store = new Store(id, name, address, city, distance, latitude, longitude, products, openingToday);
+            }
+
+
             Log.d(TAG, "generateStoreFromJsonObject: new Store: " + store);
             
             // create and return new store object and set open to false for now

@@ -28,7 +28,7 @@ import de.whatsLeft.store.Store;
  *
  * @since 1.0.0
  * @author Marvin Jütte
- * @version 1.0
+ * @version 1.1
  */
 public class LVSAdapter extends BaseAdapter {
 
@@ -96,6 +96,9 @@ public class LVSAdapter extends BaseAdapter {
     public View getView(final int position, View view, ViewGroup viewGroup) {
         view = View.inflate(context, R.layout.store_card, null);
 
+        // create new IndicatorUtils object
+        IndicatorUtils indicatorUtils = new IndicatorUtils(context);
+
         // get store
         final Store store = stores.get(position);
 
@@ -110,19 +113,8 @@ public class LVSAdapter extends BaseAdapter {
 
         // display if the store is open or not
         TextView textViewIsOpen = view.findViewById(R.id.text_view_is_open);
-        if(store.isOpen()) {
-
-            // if store is open display open in green
-            textViewIsOpen.setText(context.getString(R.string.store_is_open));
-            textViewIsOpen.setTextColor(context.getColor(R.color.holoGreenLight));
-
-        } else {
-
-            // else display closed in read
-            textViewIsOpen.setText(context.getString(R.string.store_is_closed));
-            textViewIsOpen.setTextColor(context.getColor(R.color.holoRedDark));
-
-        }
+        textViewIsOpen.setTextColor(indicatorUtils.getStoreOpenTextColor(store));
+        textViewIsOpen.setText(indicatorUtils.getStoreOpenText(store));
 
         // get first three products
         Product product1 = store.getProducts().get(0);
@@ -143,9 +135,6 @@ public class LVSAdapter extends BaseAdapter {
         TextView colorIndicatorProduct1 = view.findViewById(R.id.color_indicator_product_1);
         TextView colorIndicatorProduct2 = view.findViewById(R.id.color_indicator_product_2);
         TextView colorIndicatorProduct3 = view.findViewById(R.id.color_indicator_product_3);
-
-        // create new IndicatorUtils object
-        IndicatorUtils indicatorUtils = new IndicatorUtils(context);
 
         // set color of color indicator for first three products
         colorIndicatorProduct1.setBackgroundTintList(ColorStateList.valueOf(indicatorUtils.getIndicatorColor(product1)));

@@ -34,4 +34,6 @@
     <string name="empty">ausverkauft</string>
     <string name="less">wenig</string>
     <string name="begin">Beginnen</string>
+    <string name="opens_at">Öffnet um</string>
+    <string name="store_is_closing_at">Schließt um</string>
 </resources>
