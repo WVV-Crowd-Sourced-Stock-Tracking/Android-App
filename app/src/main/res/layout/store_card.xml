@@ -72,7 +72,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_marginEnd="10dp"
                 android:text="@string/milk" />
 
             <TextView
@@ -88,7 +87,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_marginEnd="10dp"
                 android:text="@string/bread" />
 
             <TextView
@@ -104,7 +102,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_marginEnd="10dp"
                 android:text="@string/toilet_paper" />
 
         </LinearLayout>
