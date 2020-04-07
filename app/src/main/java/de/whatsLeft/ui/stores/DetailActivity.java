@@ -22,8 +22,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -248,12 +248,8 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         // store location as lastKnownLocation
         lastKnownLocation = location;
 
-        // update camera so user does not ran out of map
-        if (location != null) {
-            LatLng lastKnownLocationLatLgn = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-            CameraPosition position = new CameraPosition(lastKnownLocationLatLgn, 13f, 0f, 0f);
-            if (mapReady) mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
-        }
+        // update camera
+        if (mapReady) updateCamera();
 
         // log location
         assert location != null;
@@ -282,8 +278,14 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         // setup google map view
         mGoogleMap = googleMap;
         mGoogleMap.setMyLocationEnabled(true);
-        mGoogleMap.setMapStyle(new MapStyleOptions(getResources().getString(R.string.style_json)));
+        mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
+        mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
+        mGoogleMap.getUiSettings().setZoomGesturesEnabled(false);
+        mGoogleMap.getUiSettings().setScrollGesturesEnabled(false);
+        mGoogleMap.getUiSettings().setRotateGesturesEnabled(false);
+        mGoogleMap.getUiSettings().setTiltGesturesEnabled(false);
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mGoogleMap.setMapStyle(new MapStyleOptions(getResources().getString(R.string.style_json)));
 
         // setup color for store markers
         float[] hsv = new float[3];
@@ -302,13 +304,22 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         Log.d(TAG, "onMapReady: lastKnownLocation: " + lastKnownLocation);
 
         // set camera to display current location and store location
-        if (lastKnownLocation != null) {
-            LatLng lastKnownLocationLatLgn = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-            CameraPosition position = new CameraPosition(lastKnownLocationLatLgn, 13f, 0f, 0f);
-            if (mapReady) mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
-        }
+        updateCamera();
 
         // set mapReady to true;
         mapReady = true;
+    }
+
+    public void updateCamera() {
+
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
+        builder.include(new LatLng(store.getLatitude(), store.getLongitude()));
+
+        LatLngBounds bounds = builder.build();
+        int padding = 100;
+
+        if (mapReady) mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+
     }
 }
