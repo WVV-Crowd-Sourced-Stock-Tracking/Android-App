@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import de.whatsLeft.MainActivity;
 import de.whatsLeft.R;
 import de.whatsLeft.store.Store;
+import de.whatsLeft.ui.stores.LVSAdapter;
 
 /**
  * This class is responsible for requesting all stores from backend.
@@ -40,7 +41,7 @@ import de.whatsLeft.store.Store;
  * @author Marvin Jütte
  * @version 1.0
  */
-public class RequestStoresFromAPI extends AsyncTask {
+public class RequestStoresAPI extends AsyncTask {
 
     private static final String REQUEST_METHOD = "POST";
     private static final int READ_TIMEOUT = 30000;
@@ -55,6 +56,7 @@ public class RequestStoresFromAPI extends AsyncTask {
     private String requestUrlString;
     private Location location;
     private ArrayList<Store> stores;
+    private LVSAdapter adapter;
 
     private static final String TAG = "RequestStoresFromAPI";
 
@@ -70,12 +72,13 @@ public class RequestStoresFromAPI extends AsyncTask {
      *
      * @since 1.0.0
      */
-    public RequestStoresFromAPI(Context context, GoogleMap googleMap, String requestUrl, Location location, ArrayList<Store> stores) {
+    public RequestStoresAPI(Context context, GoogleMap googleMap, String requestUrl, Location location, ArrayList<Store> stores, LVSAdapter adapter) {
         this.context = context;
         this.googleMap = googleMap;
         this.requestUrlString = requestUrl + "/market/scrape";
         this.location = location;
         this.stores = stores;
+        this.adapter = adapter;
     }
 
     @Override
@@ -167,6 +170,9 @@ public class RequestStoresFromAPI extends AsyncTask {
 
         // display markers on map
         displayStores();
+
+        // inform the adapter that the stores list might have changed
+        adapter.notifyDataSetChanged();
     }
 
     /**

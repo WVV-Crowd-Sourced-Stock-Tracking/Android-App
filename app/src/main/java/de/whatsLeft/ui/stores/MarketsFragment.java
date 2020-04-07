@@ -37,7 +37,7 @@ import java.util.Objects;
 
 import de.whatsLeft.MainActivity;
 import de.whatsLeft.R;
-import de.whatsLeft.connectivity.RequestStoresFromAPI;
+import de.whatsLeft.connectivity.RequestStoresAPI;
 import de.whatsLeft.store.Store;
 
 /**
@@ -162,19 +162,13 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
                     Toast.makeText(getContext(), getString(R.string.loading_new_stores), Toast.LENGTH_LONG).show();
 
                     // request new stores
-                    new RequestStoresFromAPI(getContext(), mGoogleMap, MainActivity.REQUEST_URL, location, stores).execute();
-
-                    // inform the adapter that there might be changes in store list
-                    adapter.notifyDataSetChanged();
+                    new RequestStoresAPI(getContext(), mGoogleMap, MainActivity.REQUEST_URL, location, stores, adapter).execute();
                 }
             }
         });
 
         updateCamera();
-        new RequestStoresFromAPI(getContext(), mGoogleMap, MainActivity.REQUEST_URL, lastKnownLocation, stores).execute();
-
-        // inform the adapter that there might be changes
-        adapter.notifyDataSetChanged();
+        new RequestStoresAPI(getContext(), mGoogleMap, MainActivity.REQUEST_URL, lastKnownLocation, stores, adapter).execute();
     }
 
     /**
@@ -203,10 +197,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         lastKnownLocation = location;
 
         // if map is ready request new stores
-        if(mapReady) new RequestStoresFromAPI(getContext(), mGoogleMap, MainActivity.REQUEST_URL, location, stores).execute();
-
-        // inform the adapter that there might be new stores available
-        adapter.notifyDataSetChanged();
+        if(mapReady) new RequestStoresAPI(getContext(), mGoogleMap, MainActivity.REQUEST_URL, location, stores, adapter).execute();
 
         updateCamera();
         Log.d(TAG, "onLocationChanged: location: " + location.getLatitude() + "; " + location.getLongitude());
