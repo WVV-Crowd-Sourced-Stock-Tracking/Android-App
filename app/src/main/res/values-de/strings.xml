@@ -36,4 +36,5 @@
     <string name="begin">Beginnen</string>
     <string name="opens_at">Öffnet um</string>
     <string name="store_is_closing_at">Schließt um</string>
+    <string name="loading_new_stores">Lade neue Läden</string>
 </resources>

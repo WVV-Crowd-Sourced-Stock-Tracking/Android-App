@@ -3,7 +3,6 @@ package de.whatsLeft.ui.stores;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -14,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,24 +27,17 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 
 import de.whatsLeft.MainActivity;
 import de.whatsLeft.R;
-import de.whatsLeft.connectivity.CallAPI;
+import de.whatsLeft.connectivity.RequestStoresFromAPI;
 import de.whatsLeft.store.Store;
 
 /**
@@ -54,7 +47,7 @@ import de.whatsLeft.store.Store;
  *
  * @since 1.0.0
  * @author Marvin Jütte
- * @version 1.0
+ * @version 1.1
  */
 public class MarketsFragment extends Fragment implements OnMapReadyCallback, LocationListener {
 
@@ -71,6 +64,8 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
     private ArrayList<Store> stores = new ArrayList<>();
     private LVSAdapter adapter;
 
+    private boolean upToDate;
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_markets, container, false);
         listViewStores = mView.findViewById(R.id.store_list_view);
@@ -81,71 +76,16 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
             ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
         }
 
+        // setup card view adapter to process all available stores and display them as cards in the list view
+        adapter = new LVSAdapter(getContext(), stores);
+        listViewStores.setAdapter(adapter);
+
         // setup location manager to request user moving updates
         LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         assert locationManager != null;
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this);
 
-        // setup card view adapter to process all available stores and display them as cards in the list view
-        adapter = new LVSAdapter(getContext(), stores);
-        listViewStores.setAdapter(adapter);
-
-
         return mView;
-    }
-
-    /**
-     * Requests all available stores in a radius of 1000m around the current location from backend
-     *
-     * @param location Location; object which contains the current location of the user
-     * @since 1.0.0
-     */
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void requestStores(Location location) {
-
-        // create CallAPI object, to connect to backend
-        CallAPI callAPI = new CallAPI();
-
-        // create new String object to store result
-        String result;
-
-        // create new input json object for request
-        JSONObject data = new JSONObject();
-        try {
-            // put all required information by the backend into input data json object
-            data.put("latitude", String.valueOf(location.getLatitude()));
-            data.put("longitude", String.valueOf(location.getLongitude()));
-            data.put("radius", 1000);
-
-            // connect to backend and store result in result string
-            result = callAPI.execute(MainActivity.REQUEST_URL + "/market/scrape", data.toString()).get();
-
-            // create json Object from result string if result string does not equal null
-            assert result != null;
-            JSONObject jsonResult = new JSONObject(result);
-
-            // get jsonStoreArray from result json object
-            JSONArray jsonStoreArray = jsonResult.getJSONArray("supermarket");
-
-            // loop through jsonStoreArray and create store objects
-            for (int i=0; i<jsonStoreArray.length(); i++) {
-                // add store to stores array list
-                stores.add(MainActivity.generateStoreFromJsonObject(jsonStoreArray.getJSONObject(i)));
-            }
-
-            Log.d(TAG, "requestStores: stores: " + stores);
-        } catch (JSONException | ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        // inform adapter that data has changed
-        adapter.notifyDataSetChanged();
-
-        // display stores if map is ready
-        if (mapReady) displayStores();
-
-        // log all stores
-        Log.i(TAG, "requestStores: stores: " + stores);
     }
 
     @Override
@@ -164,64 +104,77 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(final GoogleMap googleMap) {
         MapsInitializer.initialize(Objects.requireNonNull(getContext()));
 
+        // setup google maps view
         mGoogleMap = googleMap;
         mGoogleMap.setMyLocationEnabled(true);
         mGoogleMap.setMapStyle(new MapStyleOptions(getResources().getString(R.string.style_json)));
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
-
         mapReady = true;
 
-        displayStores();
-    }
+        // create on click listener for marker
+        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
 
-    /**
-     * Add markers for every store on map
-     *
-     * @since 1.0.0
-     */
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void displayStores() {
+                // get latitude and longitude from maker
+                double latitude = marker.getPosition().latitude;
+                double longitude = marker.getPosition().longitude;
 
-        // set up color marker
-        float[] hsv = new float[3];
-        Color.colorToHSV(Objects.requireNonNull(getContext()).getColor(R.color.darkBlue), hsv);
+                // find position for market at this location
+                int position = adapter.getPosition(latitude, longitude);
 
-        // loop through all stores
-        for (Store store : stores) {
+                // scroll in list view to position of store
+                listViewStores.smoothScrollToPositionFromTop(position, 20);
+                return true;
+            }
+        });
 
-            // get latitude and longitude from store
-            double latitude = store.getLatitude();
-            double longitude = store.getLongitude();
+        // set up to date to false every time the camera moved
+        mGoogleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                upToDate = false;
+            }
+        });
 
-            // add new marker which represents the current store on map
-            mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude))
-                    .title(store.getName())
-                    .icon(BitmapDescriptorFactory.defaultMarker(hsv[0])));
+        // if the camera moved request new stores based on the new camera location
+        mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                if(!upToDate) {
 
-            // create on click listener for marker
-            mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker) {
+                    // get camera position
+                    CameraPosition cameraPosition = mGoogleMap.getCameraPosition();
 
-                    // get latitude and longitude from maker
-                    double latitude = marker.getPosition().latitude;
-                    double longitude = marker.getPosition().longitude;
+                    // get latitude and longitude double value from camera position
+                    double latitude = cameraPosition.target.latitude;
+                    double longitude = cameraPosition.target.longitude;
 
-                    // find position for market at this location
-                    int position = adapter.getPosition(latitude, longitude);
+                    // create new location object
+                    Location location = new Location("");
+                    location.setLatitude(latitude);
+                    location.setLongitude(longitude);
 
-                    // scroll in list view to position of store
-                    listViewStores.smoothScrollToPositionFromTop(position, 20);
-                    return true;
+                    // make toast to show user that app is loading new stores
+                    Toast.makeText(getContext(), getString(R.string.loading_new_stores), Toast.LENGTH_LONG).show();
+
+                    // request new stores
+                    new RequestStoresFromAPI(getContext(), mGoogleMap, MainActivity.REQUEST_URL, location, stores).execute();
+
+                    // inform the adapter that there might be changes in store list
+                    adapter.notifyDataSetChanged();
                 }
-            });
-        }
+            }
+        });
 
         updateCamera();
+        new RequestStoresFromAPI(getContext(), mGoogleMap, MainActivity.REQUEST_URL, lastKnownLocation, stores).execute();
 
+        // inform the adapter that there might be changes
+        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -236,7 +189,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
             // set camera position
             LatLng lastKnownLocationLatLgn = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-            CameraPosition position = new CameraPosition(lastKnownLocationLatLgn, 12.5f, 0f, 0f);
+            CameraPosition position = new CameraPosition(lastKnownLocationLatLgn, 13f, 0f, 0f);
 
             // if map is ready move to camera to new position
             if (mapReady) mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
@@ -248,7 +201,14 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
     public void onLocationChanged(Location location) {
         // update store lists
         lastKnownLocation = location;
-        requestStores(location);
+
+        // if map is ready request new stores
+        if(mapReady) new RequestStoresFromAPI(getContext(), mGoogleMap, MainActivity.REQUEST_URL, location, stores).execute();
+
+        // inform the adapter that there might be new stores available
+        adapter.notifyDataSetChanged();
+
+        updateCamera();
         Log.d(TAG, "onLocationChanged: location: " + location.getLatitude() + "; " + location.getLongitude());
     }
 
@@ -266,4 +226,5 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
     public void onProviderDisabled(String s) {
         Log.i(TAG, "onProviderDisabled: gps disabled");
     }
+
 }

@@ -36,4 +36,5 @@
     <string name="begin">Let\'s get started</string>
     <string name="opens_at">open at</string>
     <string name="store_is_closing_at">closing at</string>
+    <string name="loading_new_stores">request new stores</string>
 </resources>

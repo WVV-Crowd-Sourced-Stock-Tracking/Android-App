@@ -1,10 +1,12 @@
 package de.whatsLeft.store;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Class to represent single stores
@@ -180,5 +182,9 @@ public class Store implements Serializable {
                 ", products=" + products +
                 ", openingToday=" + openingToday +
                 '}';
+    }
+
+    public boolean equals(Store store) {
+        return latitude == store.getLatitude() && longitude == store.getLongitude();
     }
 }
