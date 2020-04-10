@@ -37,4 +37,8 @@
     <string name="opens_at">open at</string>
     <string name="store_is_closing_at">closing at</string>
     <string name="loading_new_stores">request new stores</string>
+    <string name="filter">filter</string>
+    <string name="filter_shop">Filter Stores</string>
+    <string name="delete_filter">remove filter</string>
+    <string name="find_stores">Find Grocceries</string>
 </resources>

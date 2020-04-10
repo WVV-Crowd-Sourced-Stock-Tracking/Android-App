@@ -37,4 +37,8 @@
     <string name="opens_at">Öffnet um</string>
     <string name="store_is_closing_at">Schließt um</string>
     <string name="loading_new_stores">Lade neue Läden</string>
+    <string name="filter">Filter</string>
+    <string name="filter_shop">Shops filtern</string>
+    <string name="delete_filter">Filter löschen</string>
+    <string name="find_stores">Supermärkte anzeigen</string>
 </resources>
