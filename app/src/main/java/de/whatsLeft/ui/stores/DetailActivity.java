@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,15 +27,9 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.concurrent.ExecutionException;
-
 import de.whatsLeft.MainActivity;
 import de.whatsLeft.R;
-import de.whatsLeft.connectivity.CallAPI;
-import de.whatsLeft.store.Product;
+import de.whatsLeft.connectivity.TransmitProductStock;
 import de.whatsLeft.store.ProductComparator;
 import de.whatsLeft.store.Store;
 
@@ -194,11 +187,11 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         textViewStock.setVisibility(View.VISIBLE);
 
         // transmit data to backend
-        boolean transmitSuccessful = transmitData();
+        new TransmitProductStock(this, store).execute();
 
         // tell the user whether the transmit to backend was successful or not
-        if (transmitSuccessful) Toast.makeText(this, getString(R.string.transmit_successful), Toast.LENGTH_LONG).show();
-        else Toast.makeText(this, getString(R.string.transmit_failed), Toast.LENGTH_LONG).show();
+//        if (transmitSuccessful) Toast.makeText(this, getString(R.string.transmit_successful), Toast.LENGTH_LONG).show();
+//        else Toast.makeText(this, getString(R.string.transmit_failed), Toast.LENGTH_LONG).show();
 
         // create new object of LVPVAdapter and set it as listView's adapter
         LVPAdapter lvpAdapter = new LVPAdapter(this, store.getProducts());
@@ -207,38 +200,6 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         // log that edit mode was disabled successful and set editModeEnabled to false
         Log.i(TAG, "disableEditMode: edit mode closed successfully");
         editModeEnabled = false;
-    }
-
-    /**
-     * Transmit updated product stock to backend
-     *
-     * @return wasSuccessful boolean; return whether the transmit was successful or not
-     * @since 1.0.0
-     */
-    private boolean transmitData() {
-
-        boolean transmitSuccessful = true;
-
-        for (Product product : store.getProducts()) {
-            if (product.getAvailability() <= 100) {
-                CallAPI callAPI = new CallAPI();
-                try {
-
-                    JSONObject data = new JSONObject();
-                    data.put("market_id", store.getId());
-                    data.put("product_id", product.getId());
-                    data.put("quantity", product.getAvailability());
-
-                    JSONObject resultJsonObject = new JSONObject(callAPI.execute(MainActivity.REQUEST_URL + "/market/transmit", data.toString()).get());
-                    if (!resultJsonObject.getString("result").equals("success"))
-                        transmitSuccessful = false;
-                    Log.i(TAG, "transmitData: product: " + product + "; transmit: " + resultJsonObject.getString("result"));
-                } catch (JSONException | ExecutionException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return transmitSuccessful;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
