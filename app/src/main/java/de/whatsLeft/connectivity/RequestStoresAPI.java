@@ -4,9 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -19,12 +17,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 import de.whatsLeft.MainActivity;
@@ -34,156 +26,89 @@ import de.whatsLeft.store.Store;
 import de.whatsLeft.ui.stores.LVSAdapter;
 
 /**
- * This class is responsible for requesting all stores from backend.
- * It uses the postExecute method to display the markers and add the
- * stores, to avoid a freezing ui
+ * Child class from APIRequest; processes given data to request stores and display them properly
+ * @see APIRequest
  *
  * @since 1.0.0
  * @author Marvin Jütte
- * @version 1.1
+ * @version 1.0
  */
-public class RequestStoresAPI extends AsyncTask {
-
-    private static final String REQUEST_METHOD = "POST";
-    private static final int READ_TIMEOUT = 30000;
-    private static final int CONNECTION_TIMEOUT = 30000;
-
-    private HttpURLConnection connection;
+public class RequestStoresAPI extends APIRequest {
 
     @SuppressLint("StaticFieldLeak")
     private Context context;
 
     private GoogleMap googleMap;
-    private String requestUrlString;
-    private Location location;
     private ArrayList<Store> stores;
     private LVSAdapter adapter;
-
-    private static final String TAG = "RequestStoresFromAPI";
-
 
     /**
      * Constructor
      *
-     * @param context Context to access app colors
-     * @param googleMap GoogleMap object to display marker on it
-     * @param requestUrl String to the base request url /market/scrape is added in constructor
-     * @param location Location object to parse the location in the json input for api
-     * @param stores reference to stores arrayList from MarketsFragment to add new stores
+     * @param context Context to access project colors
+     * @param googleMap GoogleMap object to display maker
+     * @param location to get current location
+     * @param stores ArrayList to loop through stores to check if the store is already in list
+     * @param adapter LVSAdapter to inform hin about changes
+     *
+     * @see LVSAdapter
      *
      * @since 1.0.0
      */
-    public RequestStoresAPI(Context context, GoogleMap googleMap, String requestUrl, Location location, ArrayList<Store> stores, LVSAdapter adapter) {
+    public RequestStoresAPI(Context context, GoogleMap googleMap, Location location, ArrayList<Store> stores, LVSAdapter adapter) {
+        super("/market/scrape", createInputJSONObject(location).toString());
         this.context = context;
         this.googleMap = googleMap;
-        this.requestUrlString = requestUrl + "/market/scrape";
-        this.location = location;
         this.stores = stores;
         this.adapter = adapter;
     }
 
-    @Override
-    protected String doInBackground(Object... objects) {
-        Log.d(TAG, "doInBackground: called");
-
-        // default successful is failed
-        String result = "failed";
-
-        // log request url and input data
-        Log.i(TAG, "doInBackground: requestUrlString: " + requestUrlString);
+    /**
+     * Creates the input json object for constructor based on current location
+     *
+     * @param location current location
+     * @return inputJsonObject containing coordinates and search radius
+     * @since 1.0.0
+     */
+    private static JSONObject createInputJSONObject(Location location) {
 
         try {
-            // create connection object
-            URL requestUrl = new URL(requestUrlString);
-            connection = (HttpURLConnection) requestUrl.openConnection();
-
-            // setup connection
-            connection.setRequestMethod(REQUEST_METHOD);
-            connection.setReadTimeout(READ_TIMEOUT);
-            connection.setConnectTimeout(CONNECTION_TIMEOUT);
-
-            // prepare connection for post request
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-            connection.setUseCaches(true);
-            connection.setRequestProperty("Content-Type", "application/json");
-
-            // create input json object
             JSONObject inputJsonObject = new JSONObject();
-            try {
-                // store input data in json object
-                inputJsonObject.put("latitude", location.getLatitude());
-                inputJsonObject.put("longitude", location.getLongitude());
-                inputJsonObject.put("radius", 2000);
 
-                // if there were some selected products in filter view add them to a json array
-                if (MainActivity.selectedProducts.size() > 0) {
+            // store input data in json object
+            inputJsonObject.put("latitude", location.getLatitude());
+            inputJsonObject.put("longitude", location.getLongitude());
+            inputJsonObject.put("radius", 2000);
 
-                    // create new and empty product id json arry
-                    JSONArray selectedProductsJsonArray = new JSONArray();
+            // if there are some selected products in filter view add their product ids to a json array
+            if (MainActivity.selectedProducts.size() > 0) {
 
-                    // for each selected product add product id to json array
-                    for (Product product : MainActivity.selectedProducts) {
-                        selectedProductsJsonArray.put(product.getId());
-                    }
+                // create empty jsonArray which contains the product ids
+                JSONArray productIds = new JSONArray();
 
-                    // add selected products to input json object
-                    inputJsonObject.put("product_id", selectedProductsJsonArray);
+                // for each selected product add it's product id to the json array
+                for (Product product : MainActivity.selectedProducts) {
+                    productIds.put(product.getId());
                 }
 
+                // add selected products to input json object
+                inputJsonObject.put("product_id", productIds);
 
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
 
-            Log.i(TAG, "doInBackground: inputData: " + inputJsonObject.toString());
+            return inputJsonObject;
 
-            // add input data to connection
-            OutputStreamWriter streamWriter = new OutputStreamWriter(connection.getOutputStream());
-            streamWriter.write(inputJsonObject.toString());
-            streamWriter.flush();
-
-            // connect to url
-            connection.connect();
-
-            // save response from backend
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-
-            // read response from backend
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line).append("\n");
-            }
-
-            Log.d(TAG, "doInBackground: stringBuilder: " + stringBuilder.toString());
-
-            // close reader
-            reader.close();
-
-            // store everything in result string
-            result = stringBuilder.toString();
-
-
-        } catch (IOException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
-        } finally {
-            // disconnect from backend
-            connection.disconnect();
         }
 
-        // log if communication to backend was successful and the backend's response
-        Log.i(TAG, "doInBackground: result: " + result);
-        return result;
+        return new JSONObject();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-    protected void onPostExecute(Object o) {
-        // get result String object
-        String result = (String) o;
-
-        // add new found stores to stores list
+    protected void onPostExecute(String result) {
+        // ad new found stores to stores list
         addNewStoresToList(result);
 
         // display markers on map
@@ -261,4 +186,5 @@ public class RequestStoresAPI extends AsyncTask {
                     .icon(BitmapDescriptorFactory.defaultMarker(hsv[0])));
         }
     }
+
 }
