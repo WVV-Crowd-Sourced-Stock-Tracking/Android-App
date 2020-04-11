@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import de.whatsLeft.MainActivity;
 import de.whatsLeft.R;
 import de.whatsLeft.store.Product;
 
@@ -21,6 +22,13 @@ public class FVAdapter extends BaseAdapter {
     private ArrayList<Product> products;
     private ArrayList<Product> selectedProducts = new ArrayList<>();
 
+    /**
+     * Constructor
+     *
+     * @param context  Context to use layout inflater
+     * @param products ArrayList containing all available Products
+     * @since 1.0.0
+     */
     FVAdapter(Context context, ArrayList<Product> products) {
         this.context = context;
         this.products = products;
@@ -65,9 +73,18 @@ public class FVAdapter extends BaseAdapter {
             }
         });
 
+        // preselect products if user has already selected them
+        checkBox.setChecked(MainActivity.selectedProducts.contains(product));
+
         return view;
     }
 
+    /**
+     * Deselects all checkboxes for the given list view
+     *
+     * @param listView which child views contains the checkboxes
+     * @since 1.0.0
+     */
     void removeAllChecks(ListView listView) {
         for (int i = 0; i < listView.getChildCount(); i++) {
             // get productItemView which contains checkbox
@@ -82,7 +99,10 @@ public class FVAdapter extends BaseAdapter {
         selectedProducts.clear();
     }
 
-    public ArrayList<Product> getSelectedProducts() {
+    /**
+     * @return selectedProducts an ArrayList containing all selected products
+     */
+    ArrayList<Product> getSelectedProducts() {
         return selectedProducts;
     }
 }
