@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_shopping_list"
-        android:name="de.whatsLeft.ui.shoppingList.ShoppingListFragment"
+        android:name="de.whatsLeft.ui.filterView.FilterViewFragment"
         android:label="@string/navbar_shopping_list"
-        tools:layout="@layout/fragment_shopping_list" />
+        tools:layout="@layout/fragment_filter_view" />
 </navigation>

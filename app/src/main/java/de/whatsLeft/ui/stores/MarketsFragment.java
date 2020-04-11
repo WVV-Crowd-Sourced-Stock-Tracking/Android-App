@@ -162,13 +162,15 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
                     Toast.makeText(getContext(), getString(R.string.loading_new_stores), Toast.LENGTH_LONG).show();
 
                     // request new stores
-                    new RequestStoresAPI(getContext(), mGoogleMap, MainActivity.REQUEST_URL, location, stores, adapter).execute();
+                    if (lastKnownLocation != null)
+                        new RequestStoresAPI(getContext(), mGoogleMap, MainActivity.REQUEST_URL, location, stores, adapter).execute();
                 }
             }
         });
 
         updateCamera();
-        new RequestStoresAPI(getContext(), mGoogleMap, MainActivity.REQUEST_URL, lastKnownLocation, stores, adapter).execute();
+        if (lastKnownLocation != null)
+            new RequestStoresAPI(getContext(), mGoogleMap, MainActivity.REQUEST_URL, lastKnownLocation, stores, adapter).execute();
     }
 
     /**
@@ -197,9 +199,11 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         lastKnownLocation = location;
 
         // if map is ready request new stores
-        if(mapReady) new RequestStoresAPI(getContext(), mGoogleMap, MainActivity.REQUEST_URL, location, stores, adapter).execute();
+        if (mapReady && location != null)
+            new RequestStoresAPI(getContext(), mGoogleMap, MainActivity.REQUEST_URL, location, stores, adapter).execute();
 
         updateCamera();
+        assert location != null;
         Log.d(TAG, "onLocationChanged: location: " + location.getLatitude() + "; " + location.getLongitude());
     }
 

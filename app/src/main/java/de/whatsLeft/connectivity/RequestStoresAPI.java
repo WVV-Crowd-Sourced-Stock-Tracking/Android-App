@@ -29,6 +29,7 @@ import java.util.ArrayList;
 
 import de.whatsLeft.MainActivity;
 import de.whatsLeft.R;
+import de.whatsLeft.store.Product;
 import de.whatsLeft.store.Store;
 import de.whatsLeft.ui.stores.LVSAdapter;
 
@@ -39,7 +40,7 @@ import de.whatsLeft.ui.stores.LVSAdapter;
  *
  * @since 1.0.0
  * @author Marvin Jütte
- * @version 1.0
+ * @version 1.1
  */
 public class RequestStoresAPI extends AsyncTask {
 
@@ -114,6 +115,23 @@ public class RequestStoresAPI extends AsyncTask {
                 inputJsonObject.put("latitude", location.getLatitude());
                 inputJsonObject.put("longitude", location.getLongitude());
                 inputJsonObject.put("radius", 2000);
+
+                // if there were some selected products in filter view add them to a json array
+                if (MainActivity.selectedProducts.size() > 0) {
+
+                    // create new and empty product id json arry
+                    JSONArray selectedProductsJsonArray = new JSONArray();
+
+                    // for each selected product add product id to json array
+                    for (Product product : MainActivity.selectedProducts) {
+                        selectedProductsJsonArray.put(product.getId());
+                    }
+
+                    // add selected products to input json object
+                    inputJsonObject.put("product_id", selectedProductsJsonArray);
+                }
+
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
