@@ -189,10 +189,6 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         // transmit data to backend
         new TransmitProductStock(this, store).execute();
 
-        // tell the user whether the transmit to backend was successful or not
-//        if (transmitSuccessful) Toast.makeText(this, getString(R.string.transmit_successful), Toast.LENGTH_LONG).show();
-//        else Toast.makeText(this, getString(R.string.transmit_failed), Toast.LENGTH_LONG).show();
-
         // create new object of LVPVAdapter and set it as listView's adapter
         LVPAdapter lvpAdapter = new LVPAdapter(this, store.getProducts());
         listView.setAdapter(lvpAdapter);
