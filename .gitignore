@@ -179,3 +179,4 @@ hs_err_pid*
 app/libs/
 image_material/
 .idea/.name
+doc/
