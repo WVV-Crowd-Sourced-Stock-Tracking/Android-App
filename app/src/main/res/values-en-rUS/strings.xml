@@ -40,5 +40,5 @@
     <string name="filter">filter</string>
     <string name="filter_shop">Filter Stores</string>
     <string name="delete_filter">remove filter</string>
-    <string name="find_stores">Find Grocceries</string>
+    <string name="find_stores">Search Stores</string>
 </resources>
