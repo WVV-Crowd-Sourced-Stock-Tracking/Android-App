@@ -16,6 +16,15 @@ import de.whatsLeft.MainActivity;
 import de.whatsLeft.R;
 import de.whatsLeft.store.Product;
 
+/**
+ * FVAdapter --> FilterViewAdapter
+ * Responsible for managing the View to select products in ListView
+ *
+ * @author Marvin Jütte
+ * @version 1.0
+ * @see FilterViewFragment
+ * @since 1.0.0
+ */
 public class FVAdapter extends BaseAdapter {
 
     private Context context;

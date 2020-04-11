@@ -15,6 +15,15 @@ import androidx.navigation.Navigation;
 import de.whatsLeft.MainActivity;
 import de.whatsLeft.R;
 
+/**
+ * Fragment to apply filter for store request
+ * <p>Products in ListView are managed by FVAdapter</p>
+ *
+ * @author Marvin Jütte
+ * @version 1.0
+ * @see FVAdapter
+ * @since 1.0.0
+ */
 public class FilterViewFragment extends Fragment {
 
     private static final String TAG = "FilterViewFragment";

@@ -1,5 +1,5 @@
 /**
- * This package contains all classes needed to display market overview or the detail view of singe
+ * This package contains all classes needed to display market overview or the detail view of single
  * markets
  *
  * @since 1.0.0
