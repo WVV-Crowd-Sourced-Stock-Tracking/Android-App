@@ -18,7 +18,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
@@ -32,7 +31,7 @@ import de.whatsLeft.store.Store;
  * 
  * @since 1.0.0
  * @author Marvin Jütte
- * @version 1.0
+ * @version 1.1
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -41,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static ArrayList<Product> availableProducts = new ArrayList<>();
     public static int highestID;
+
+    public static ArrayList<Product> selectedProducts = new ArrayList<>();
 
     private static final String TAG = "MainActivity";
     
