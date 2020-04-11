@@ -19,9 +19,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.concurrent.ExecutionException;
 
-import de.whatsLeft.connectivity.CallAPI;
+import de.whatsLeft.connectivity.RequestProductAPI;
 import de.whatsLeft.store.Product;
 import de.whatsLeft.store.ProductComparator;
 import de.whatsLeft.store.Store;
@@ -31,12 +30,9 @@ import de.whatsLeft.store.Store;
  * 
  * @since 1.0.0
  * @author Marvin Jütte
- * @version 1.1
+ * @version 1.2
  */
 public class MainActivity extends AppCompatActivity {
-
-    // public static final String REQUEST_URL = "https://wvvcrowdmarket.herokuapp.com/ws/rest";
-    public static final String REQUEST_URL = "https://wvv2.herokuapp.com/ws/rest";
 
     public static ArrayList<Product> availableProducts = new ArrayList<>();
     public static int highestID;
@@ -55,48 +51,9 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(navView, navController);
 
-        // store all products in available products
-        availableProducts = getAllProducts();
+        // get all available products and the highest product id
+        new RequestProductAPI().execute();
 
-        // findHighestId of all available Products
-        highestID = findHighestID(availableProducts);
-
-    }
-
-    /**
-     * Fetches all products from backend and stores them into an array list
-     *
-     * @return products ArrayList<Product>; an array list containing all products available by backend
-     * @since 1.0.0
-     */
-    private ArrayList<Product> getAllProducts() {
-        // create new and empty products array list
-        ArrayList<Product> products = new ArrayList<>();
-
-        // create new callAPI object to connect to backend
-        CallAPI callAPI = new CallAPI();
-        try {
-            // connect to backend and store response in a json object
-            JSONObject resultObject = new JSONObject(callAPI.execute(REQUEST_URL + "/product/scrape", "{}").get());
-
-            // get products array from backend response
-            JSONArray allProductsJsonArray = resultObject.getJSONArray("product");
-
-            // loop through all products
-            for (int i = 0; i < allProductsJsonArray.length(); i++) {
-
-                // get json product object from array
-                JSONObject productJsonObject = allProductsJsonArray.getJSONObject(i);
-
-                // generate and add product to products array list
-                products.add(generateProductFromJsonObject(productJsonObject));
-            }
-
-        } catch (JSONException | ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return products;
     }
 
     /**
@@ -223,60 +180,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "generateProductsList: products: " + products);
 
         return products;
-    }
-
-    /**
-     * Generates a product object from the given json object
-     *
-     * @param productJsonObject JsonObject; a json object containing all product information
-     * @return product Product; the product object which attributes are equal to the json object's ones
-     * @since 1.0.0
-     */
-    private static Product generateProductFromJsonObject(JSONObject productJsonObject) {
-        try {
-            // get all attributes from json object
-            int id = productJsonObject.getInt("product_id");
-            String name = productJsonObject.getString("product_name");
-            String emoticon = productJsonObject.getString("emoji");
-
-            // set availability of product
-            int availability;
-
-            // check if product json object has a availability field
-            if (productJsonObject.has("availability")) {
-                // if it has one; the availability will be set to the json object's value
-                availability = productJsonObject.getInt("availability");
-            } else {
-                // else it will be 101 to indicate that there are no further information about it's availability
-                availability = 101;
-            }
-
-            // create new product object
-            Product product = new Product(id, name, emoticon, availability);
-
-            Log.d(TAG, "generateProductFromJsonObject: new Product: " + product);
-
-            return product;
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        // if creation failed return null
-        return null;
-    }
-
-    /**
-     * This method finds the highest ID of the given product list
-     *
-     * @return highestID int; The highest ProductID of given products array list
-     * @since 1.0.0
-     */
-    private int findHighestID(ArrayList<Product> products) {
-        int highestID = 0;
-        for (Product product : products) {
-            highestID = Math.max(highestID, product.getId());
-        }
-        return highestID;
     }
 
     /**

@@ -35,7 +35,6 @@ import com.google.android.gms.maps.model.Marker;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import de.whatsLeft.MainActivity;
 import de.whatsLeft.R;
 import de.whatsLeft.connectivity.RequestStoresAPI;
 import de.whatsLeft.store.Store;
@@ -163,14 +162,12 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
                     // request new stores
                     if (lastKnownLocation != null)
-                        new RequestStoresAPI(getContext(), mGoogleMap, MainActivity.REQUEST_URL, location, stores, adapter).execute();
+                        new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter).execute();
                 }
             }
         });
 
         updateCamera();
-        if (lastKnownLocation != null)
-            new RequestStoresAPI(getContext(), mGoogleMap, MainActivity.REQUEST_URL, lastKnownLocation, stores, adapter).execute();
     }
 
     /**
@@ -200,7 +197,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
         // if map is ready request new stores
         if (mapReady && location != null)
-            new RequestStoresAPI(getContext(), mGoogleMap, MainActivity.REQUEST_URL, location, stores, adapter).execute();
+            new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter).execute();
 
         updateCamera();
         assert location != null;
