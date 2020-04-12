@@ -34,10 +34,10 @@ public class TimeUtils {
                 int openDayID = jsonPeriodObject.getInt("open_day_id");
 
                 // if there is an item for current day return
-                if (openDayID == Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) return i;
+                if (openDayID == (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1)) return i;
 
                 // abort, if openDayID is bigger the current day id and return -1 because no period was found
-                if (openDayID > Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) return -1;
+                if (openDayID > (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1)) return -1;
 
             } catch (JSONException e) {
                 e.printStackTrace();

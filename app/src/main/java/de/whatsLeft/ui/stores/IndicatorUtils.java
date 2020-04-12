@@ -2,14 +2,12 @@ package de.whatsLeft.ui.stores;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
 import java.text.SimpleDateFormat;
-import java.time.Period;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 import de.whatsLeft.R;
@@ -22,9 +20,11 @@ import de.whatsLeft.store.Store;
  *
  * @since 1.0.0
  * @author Marvin Jütte
- * @version 1.1
+ * @version 1.2
  */
-public class IndicatorUtils {
+class IndicatorUtils {
+
+    private static final String TAG = "IndicatorUtils";
 
     private Context context;
 
@@ -33,7 +33,7 @@ public class IndicatorUtils {
      * @param context Context to access project colors
      * @since 1.0.0
      */
-    public IndicatorUtils(Context context) {
+    IndicatorUtils(Context context) {
         this.context = context;
     }
 
@@ -42,7 +42,7 @@ public class IndicatorUtils {
      * @since 1.0.0
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public int getIndicatorColor(Product product) {
+    int getIndicatorColor(Product product) {
         int availability = product.getAvailability();
         if (availability >= 0 && availability < 34) return context.getColor(R.color.holoRedDark);
         else if (availability > 33 && availability < 67)  return context.getColor(R.color.holoOrangeDark);
@@ -54,7 +54,7 @@ public class IndicatorUtils {
      * @return indicatorText text from resource string file for text indicator representing availability
      * @since 1.0.0
      */
-    public String getIndicatorText(Product product) {
+    String getIndicatorText(Product product) {
         int availability = product.getAvailability();
         if (availability >= 0 && availability < 34) return context.getString(R.string.empty);
         else if (availability > 33 && availability < 67) return context.getString(R.string.less);
@@ -70,9 +70,14 @@ public class IndicatorUtils {
      * @since 1.0.0
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public int getStoreOpenTextColor(Store store) {
+    int getStoreOpenTextColor(Store store) {
         // get current date
         Date date = new Date();
+
+        Log.i(TAG, "getStoreOpenTextColor: date: " + date);
+
+        // if store is closed all day --> return red
+        if (!store.isOpeningToday()) return context.getColor(R.color.holoRedDark);
 
         // if there is no date store has open all day --> return green
         if(store.getOpeningDate() == null) return context.getColor(R.color.holoGreenLight);
@@ -97,10 +102,13 @@ public class IndicatorUtils {
      * @since 1.0.0
      */
     @SuppressLint("SimpleDateFormat")
-    public String getStoreOpenText(Store store) {
+    String getStoreOpenText(Store store) {
 
         // get current Date
         Date date = new Date();
+
+        // if store is not opening today --> return closed
+        if (!store.isOpeningToday()) return context.getString(R.string.store_is_closed);
 
         // if store is always open return open
         if(store.getOpeningDate() == null) return context.getString(R.string.store_is_open);
