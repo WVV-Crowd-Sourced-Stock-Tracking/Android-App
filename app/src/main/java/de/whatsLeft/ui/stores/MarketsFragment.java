@@ -3,6 +3,7 @@ package de.whatsLeft.ui.stores;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -22,6 +24,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -31,6 +35,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -63,7 +68,12 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
     private ArrayList<Store> stores = new ArrayList<>();
     private LVSAdapter adapter;
 
-    private boolean upToDate;
+    private boolean firstRun = true;
+
+    private ListView storesListView;
+    private LinearLayout progressUpdate;
+
+    private boolean upToDate = false;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_markets, container, false);
@@ -82,14 +92,36 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         // setup location manager to request user moving updates
         LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         assert locationManager != null;
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this);
+//        lastKnownLocation = locationManager.getLastKnownLocation(Objects.requireNonNull(locationManager.getBestProvider(new Criteria(), false)));
+//        locationManager.requestLocationUpdates(Objects.requireNonNull(locationManager.getBestProvider(new Criteria(), true)), 0, 0, this);
+
+        getLastKnownLocation();
+
+        Log.d(TAG, "onCreateView: lastKnownLocation: " + lastKnownLocation);
+        Log.i(TAG, "onCreateView: provider: " + locationManager.getBestProvider(new Criteria(), true));
 
         return mView;
+    }
+
+    private void getLastKnownLocation() {
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(getContext()));
+        fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                Log.d(TAG, "onSuccess: location: " + location);
+                lastKnownLocation = location;
+                updateCamera();
+                new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter, storesListView, progressUpdate).execute();
+            }
+        });
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        progressUpdate = view.findViewById(R.id.progress_bar_with_text);
+        storesListView = view.findViewById(R.id.store_list_view);
 
         // setup google map view
         MapView mapView = mView.findViewById(R.id.map);
@@ -158,11 +190,13 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
                     location.setLongitude(longitude);
 
                     // make toast to show user that app is loading new stores
-                    Toast.makeText(getContext(), getString(R.string.loading_new_stores), Toast.LENGTH_LONG).show();
+                    if (!firstRun)
+                        Toast.makeText(getContext(), getString(R.string.loading_new_stores), Toast.LENGTH_LONG).show();
 
                     // request new stores
                     if (lastKnownLocation != null)
-                        new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter).execute();
+                        new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter, storesListView, progressUpdate).execute();
+                    firstRun = false;
                 }
             }
         });
@@ -197,7 +231,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
         // if map is ready request new stores
         if (mapReady && location != null)
-            new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter).execute();
+            new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter, listViewStores, progressUpdate).execute();
 
         updateCamera();
         assert location != null;

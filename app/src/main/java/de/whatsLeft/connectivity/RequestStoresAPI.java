@@ -5,6 +5,9 @@ import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import androidx.annotation.RequiresApi;
 
@@ -31,7 +34,7 @@ import de.whatsLeft.ui.stores.LVSAdapter;
  *
  * @since 1.0.0
  * @author Marvin Jütte
- * @version 1.0
+ * @version 1.1
  */
 public class RequestStoresAPI extends APIRequest {
 
@@ -41,6 +44,10 @@ public class RequestStoresAPI extends APIRequest {
     private GoogleMap googleMap;
     private ArrayList<Store> stores;
     private LVSAdapter adapter;
+    @SuppressLint("StaticFieldLeak")
+    private ListView storeListView;
+    @SuppressLint("StaticFieldLeak")
+    private LinearLayout progressUpdate;
 
     /**
      * Constructor
@@ -55,12 +62,14 @@ public class RequestStoresAPI extends APIRequest {
      *
      * @since 1.0.0
      */
-    public RequestStoresAPI(Context context, GoogleMap googleMap, Location location, ArrayList<Store> stores, LVSAdapter adapter) {
+    public RequestStoresAPI(Context context, GoogleMap googleMap, Location location, ArrayList<Store> stores, LVSAdapter adapter, ListView storeListView, LinearLayout progressUpdate) {
         super("/market/scrape", createInputJSONObject(location).toString());
         this.context = context;
         this.googleMap = googleMap;
         this.stores = stores;
         this.adapter = adapter;
+        this.storeListView = storeListView;
+        this.progressUpdate = progressUpdate;
     }
 
     /**
@@ -114,8 +123,14 @@ public class RequestStoresAPI extends APIRequest {
         // display markers on map
         displayStores();
 
+        // hide progress bar and show store list
+        progressUpdate.setVisibility(View.GONE);
+        storeListView.setVisibility(View.VISIBLE);
+
         // inform the adapter that the stores list might have changed
         adapter.notifyDataSetChanged();
+
+
     }
 
     /**
