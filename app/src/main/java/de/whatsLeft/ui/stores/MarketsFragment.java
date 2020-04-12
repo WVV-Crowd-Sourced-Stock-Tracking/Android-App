@@ -108,7 +108,10 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
+                Log.d(TAG, "onSuccess: location: " + location);
                 lastKnownLocation = location;
+                updateCamera();
+                new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter, storesListView, progressUpdate).execute();
             }
         });
     }
