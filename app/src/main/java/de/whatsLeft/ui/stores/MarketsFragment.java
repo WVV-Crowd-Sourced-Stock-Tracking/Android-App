@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -63,6 +64,11 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
     private ArrayList<Store> stores = new ArrayList<>();
     private LVSAdapter adapter;
 
+    private boolean firstRun = true;
+
+    private ListView storesListView;
+    private LinearLayout progressUpdate;
+
     private boolean upToDate;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,6 +96,9 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        progressUpdate = view.findViewById(R.id.progress_bar_with_text);
+        storesListView = view.findViewById(R.id.store_list_view);
 
         // setup google map view
         MapView mapView = mView.findViewById(R.id.map);
@@ -158,11 +167,13 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
                     location.setLongitude(longitude);
 
                     // make toast to show user that app is loading new stores
-                    Toast.makeText(getContext(), getString(R.string.loading_new_stores), Toast.LENGTH_LONG).show();
+                    if (!firstRun)
+                        Toast.makeText(getContext(), getString(R.string.loading_new_stores), Toast.LENGTH_LONG).show();
 
                     // request new stores
                     if (lastKnownLocation != null)
-                        new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter).execute();
+                        new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter, storesListView, progressUpdate).execute();
+                    firstRun = false;
                 }
             }
         });
@@ -197,7 +208,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
         // if map is ready request new stores
         if (mapReady && location != null)
-            new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter).execute();
+            new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter, listViewStores, progressUpdate).execute();
 
         updateCamera();
         assert location != null;
