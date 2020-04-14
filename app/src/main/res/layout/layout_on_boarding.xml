@@ -51,6 +51,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_onboarding1"
+        app:srcCompat="@drawable/ic_on_boarding1"
         android:contentDescription="@string/icon_description" />
 </androidx.constraintlayout.widget.ConstraintLayout>

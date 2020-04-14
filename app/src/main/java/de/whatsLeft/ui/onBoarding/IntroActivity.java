@@ -62,9 +62,9 @@ public class IntroActivity extends AppCompatActivity {
 
         // fill list screen
         List<ScreenItem> mList = new ArrayList<>();
-        mList.add(new ScreenItem(getString(R.string.app_name), getString(R.string.on_boarding_message_1), R.drawable.ic_onboarding1));
-        mList.add(new ScreenItem(getString(R.string.app_name), getString(R.string.on_boarding_message_2), R.drawable.ic_onboarding2));
-        mList.add(new ScreenItem(getString(R.string.app_name), getString(R.string.on_boarding_message_3), R.drawable.ic_onboarding3));
+        mList.add(new ScreenItem(getString(R.string.app_name), getString(R.string.on_boarding_message_1), R.drawable.ic_on_boarding1));
+        mList.add(new ScreenItem(getString(R.string.app_name), getString(R.string.on_boarding_message_2), R.drawable.ic_on_boarding2));
+        mList.add(new ScreenItem(getString(R.string.app_name), getString(R.string.on_boarding_message_3), R.drawable.ic_on_boarding3));
 
         // setup viewpager
         screenPager = findViewById(R.id.screen_viewpager);

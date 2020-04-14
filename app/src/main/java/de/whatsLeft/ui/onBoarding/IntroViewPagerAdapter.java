@@ -40,7 +40,7 @@ public class IntroViewPagerAdapter extends PagerAdapter {
 
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         assert inflater != null;
-        @SuppressLint("InflateParams") View layoutScreen = inflater.inflate(R.layout.layout_screen, null);
+        @SuppressLint("InflateParams") View layoutScreen = inflater.inflate(R.layout.layout_on_boarding, null);
         ImageView imgSlide = layoutScreen.findViewById(R.id.intro_img1);
         TextView title = layoutScreen.findViewById(R.id.intro_title);
         TextView description = layoutScreen.findViewById(R.id.intro_description);
