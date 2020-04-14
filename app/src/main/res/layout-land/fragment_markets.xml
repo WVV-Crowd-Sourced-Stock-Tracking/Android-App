@@ -6,10 +6,31 @@
     android:orientation="vertical"
     tools:context=".ui.stores.MarketsFragment">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/market"
+        android:textSize="32sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:text="@string/near_you" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/map"
+            android:layout_width="310dp"
+            android:layout_height="230dp"
+            android:layout_margin="16dp"
+            android:paddingBottom="16dp" />
 
         <LinearLayout
             android:id="@+id/progress_bar_with_text"
@@ -45,27 +66,8 @@
             android:dividerHeight="15dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:visibility="gone"></ListView>
+            android:visibility="gone" />
 
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/map"
-            android:layout_width="310dp"
-            android:layout_height="230dp"
-            android:layout_margin="16dp"
-            android:paddingBottom="16dp" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:text="@string/near_you" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/market"
-        android:textSize="32sp" />
 </LinearLayout>
