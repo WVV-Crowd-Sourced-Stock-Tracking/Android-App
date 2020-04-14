@@ -22,9 +22,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import de.whatsLeft.FormatUtils;
 import de.whatsLeft.MainActivity;
 import de.whatsLeft.R;
-import de.whatsLeft.store.Product;
 import de.whatsLeft.store.Store;
 import de.whatsLeft.ui.stores.LVSAdapter;
 
@@ -63,55 +63,13 @@ public class RequestStoresAPI extends APIRequest {
      * @since 1.0.0
      */
     public RequestStoresAPI(Context context, GoogleMap googleMap, Location location, ArrayList<Store> stores, LVSAdapter adapter, ListView storeListView, LinearLayout progressUpdate) {
-        super("/market/scrape", createInputJSONObject(location).toString());
+        super("/market/scrape", FormatUtils.createInputJSONObject(location).toString());
         this.context = context;
         this.googleMap = googleMap;
         this.stores = stores;
         this.adapter = adapter;
         this.storeListView = storeListView;
         this.progressUpdate = progressUpdate;
-    }
-
-    /**
-     * Creates the input json object for constructor based on current location
-     *
-     * @param location current location
-     * @return inputJsonObject containing coordinates and search radius
-     * @since 1.0.0
-     */
-    private static JSONObject createInputJSONObject(Location location) {
-
-        try {
-            JSONObject inputJsonObject = new JSONObject();
-
-            // store input data in json object
-            inputJsonObject.put("latitude", location.getLatitude());
-            inputJsonObject.put("longitude", location.getLongitude());
-            inputJsonObject.put("radius", 2000);
-
-            // if there are some selected products in filter view add their product ids to a json array
-            if (MainActivity.selectedProducts.size() > 0) {
-
-                // create empty jsonArray which contains the product ids
-                JSONArray productIds = new JSONArray();
-
-                // for each selected product add it's product id to the json array
-                for (Product product : MainActivity.selectedProducts) {
-                    productIds.put(product.getId());
-                }
-
-                // add selected products to input json object
-                inputJsonObject.put("product_id", productIds);
-
-            }
-
-            return inputJsonObject;
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return new JSONObject();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

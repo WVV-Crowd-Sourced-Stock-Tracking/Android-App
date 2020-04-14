@@ -29,7 +29,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import de.whatsLeft.FormatUtils;
 import de.whatsLeft.R;
-import de.whatsLeft.connectivity.TransmitProductStock;
+import de.whatsLeft.connectivity.TransmitProductStockAPI;
 import de.whatsLeft.store.ProductComparator;
 import de.whatsLeft.store.Store;
 import de.whatsLeft.ui.IndicatorUtils;
@@ -188,7 +188,7 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         textViewStock.setVisibility(View.VISIBLE);
 
         // transmit data to backend
-        new TransmitProductStock(this, store).execute();
+        new TransmitProductStockAPI(this, store).execute();
 
         // create new object of LVPVAdapter and set it as listView's adapter
         LVPAdapter lvpAdapter = new LVPAdapter(this, store.getProducts());

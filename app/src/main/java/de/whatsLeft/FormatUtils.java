@@ -1,5 +1,6 @@
 package de.whatsLeft;
 
+import android.location.Location;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -195,5 +196,47 @@ public class FormatUtils {
 
         // return distance as a string
         return distanceString;
+    }
+
+    /**
+     * Creates the input json object for constructor based on current location
+     *
+     * @param location current location
+     * @return inputJsonObject containing coordinates and search radius
+     * @since 1.0.0
+     */
+    public static JSONObject createInputJSONObject(Location location) {
+
+        try {
+            JSONObject inputJsonObject = new JSONObject();
+
+            // store input data in json object
+            inputJsonObject.put("latitude", location.getLatitude());
+            inputJsonObject.put("longitude", location.getLongitude());
+            inputJsonObject.put("radius", 2000);
+
+            // if there are some selected products in filter view add their product ids to a json array
+            if (MainActivity.selectedProducts.size() > 0) {
+
+                // create empty jsonArray which contains the product ids
+                JSONArray productIds = new JSONArray();
+
+                // for each selected product add it's product id to the json array
+                for (Product product : MainActivity.selectedProducts) {
+                    productIds.put(product.getId());
+                }
+
+                // add selected products to input json object
+                inputJsonObject.put("product_id", productIds);
+
+            }
+
+            return inputJsonObject;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return new JSONObject();
     }
 }

@@ -20,7 +20,7 @@ import de.whatsLeft.store.Store;
  * @see APIRequest
  * @since 1.0.0
  */
-public class TransmitProductStock extends APIRequest {
+public class TransmitProductStockAPI extends APIRequest {
 
     @SuppressLint("StaticFieldLeak")
     private Context context;
@@ -32,7 +32,7 @@ public class TransmitProductStock extends APIRequest {
      * @param store   Store to get store id and it's products
      * @since 1.0.0
      */
-    public TransmitProductStock(Context context, Store store) {
+    public TransmitProductStockAPI(Context context, Store store) {
         super("/market/transmit", createInputJSONObject(store).toString());
         this.context = context;
     }
