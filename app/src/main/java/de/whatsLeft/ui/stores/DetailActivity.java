@@ -235,11 +235,7 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         // setup google map view
         mGoogleMap = googleMap;
         mGoogleMap.setMyLocationEnabled(true);
-        mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
         mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
-        mGoogleMap.getUiSettings().setZoomGesturesEnabled(false);
-        mGoogleMap.getUiSettings().setScrollGesturesEnabled(false);
-        mGoogleMap.getUiSettings().setRotateGesturesEnabled(false);
         mGoogleMap.getUiSettings().setTiltGesturesEnabled(false);
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
         mGoogleMap.setMapStyle(new MapStyleOptions(getResources().getString(R.string.style_json)));
