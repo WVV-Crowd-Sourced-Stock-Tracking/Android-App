@@ -92,8 +92,6 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         // setup location manager to request user moving updates
         LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         assert locationManager != null;
-//        lastKnownLocation = locationManager.getLastKnownLocation(Objects.requireNonNull(locationManager.getBestProvider(new Criteria(), false)));
-//        locationManager.requestLocationUpdates(Objects.requireNonNull(locationManager.getBestProvider(new Criteria(), true)), 0, 0, this);
 
         getLastKnownLocation();
 
