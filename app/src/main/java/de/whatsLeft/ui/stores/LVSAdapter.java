@@ -19,6 +19,8 @@ import de.whatsLeft.MainActivity;
 import de.whatsLeft.R;
 import de.whatsLeft.store.Product;
 import de.whatsLeft.store.Store;
+import de.whatsLeft.ui.IndicatorUtils;
+import de.whatsLeft.ui.detailActivity.DetailActivity;
 
 /**
  * LVSAdapter --> ListViewStoresAdapter

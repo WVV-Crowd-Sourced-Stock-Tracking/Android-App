@@ -41,7 +41,7 @@
             </intent-filter>
 
         </activity>
-        <activity android:name="de.whatsLeft.ui.stores.DetailActivity" />
+        <activity android:name="de.whatsLeft.ui.detailActivity.DetailActivity" />
 
         <activity android:name="de.whatsLeft.MainActivity" />
 

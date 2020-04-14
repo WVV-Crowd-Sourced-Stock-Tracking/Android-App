@@ -1,4 +1,4 @@
-package de.whatsLeft.ui.stores;
+package de.whatsLeft.ui.detailActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import de.whatsLeft.R;
 import de.whatsLeft.store.Product;
+import de.whatsLeft.ui.IndicatorUtils;
 
 /**
  * LVPAdapter --> ListViewProductsAdapter

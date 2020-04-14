@@ -17,7 +17,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 import de.whatsLeft.connectivity.RequestProductAPI;
@@ -82,13 +81,13 @@ public class MainActivity extends AppCompatActivity {
             JSONArray jsonPeriodsArray = jsonStoreObject.getJSONArray("periods");
 
             // generate product from current json object in products array list
-            ArrayList<Product> products = generateProductsList(jsonProductArray);
+            ArrayList<Product> products = FormatUtils.generateProductsList(jsonProductArray);
 
             // sort products list
             products.sort(new ProductComparator());
 
             // look if store opens today
-            int indexOfCurrentPeriod = TimeUtils.findPeriodForCurrentDay(jsonPeriodsArray);
+            int indexOfCurrentPeriod = FormatUtils.findPeriodForCurrentDay(jsonPeriodsArray);
 
             // if no openingDayId was found the store is closed for this day
             boolean openingToday = indexOfCurrentPeriod != -1;
@@ -98,8 +97,8 @@ public class MainActivity extends AppCompatActivity {
                 // get period object for current day
                 JSONObject jsonPeriodObject = jsonPeriodsArray.getJSONObject(indexOfCurrentPeriod);
 
-                Date openingDate = TimeUtils.generateDateFromPeriods(jsonPeriodObject, false);
-                Date closingDate = TimeUtils.generateDateFromPeriods(jsonPeriodObject, true);
+                Date openingDate = FormatUtils.generateDateFromPeriods(jsonPeriodObject, false);
+                Date closingDate = FormatUtils.generateDateFromPeriods(jsonPeriodObject, true);
 
                 // create new Store object
                 store = new Store(id, name, address, city, distance, latitude, longitude, products, true, openingDate, closingDate);
@@ -120,96 +119,6 @@ public class MainActivity extends AppCompatActivity {
 
         // return null if creation was not successful
         return null;
-    }
-
-    /**
-     * Generates a products array list with product objects from a products json array
-     *
-     * @param jsonProductsArray containing all products
-     * @return products array list containing all products for the store
-     * @since 1.0.0
-     */
-    private static ArrayList<Product> generateProductsList(JSONArray jsonProductsArray) {
-        // create empty products list
-        ArrayList<Product> products = new ArrayList<>();
-
-        // create array to indicate whether for the given product id a product is available in store
-        boolean[] productsInList = new boolean[MainActivity.highestID + 1];
-        Arrays.fill(productsInList, Boolean.FALSE);
-
-        try {
-            for (int i = 0; i < jsonProductsArray.length(); i++) {
-                JSONObject productJsonObject = jsonProductsArray.getJSONObject(i);
-
-                // get all relevant attributes from json object
-                int id = productJsonObject.getInt("product_id");
-                String name = productJsonObject.getString("product_name");
-                String emoticon = productJsonObject.getString("emoji");
-                int availability = productJsonObject.getInt("availability");
-
-
-                // create product and store it in array list
-                Product product = new Product(id, name, emoticon, availability);
-                products.add(product);
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        // store true in array where index equals product id to indicate that product is already in store
-        for (Product product : products) {
-            productsInList[product.getId()] = true;
-        }
-
-        // add all missing products to store
-        // loop through all available Products
-        for (Product product : MainActivity.availableProducts) {
-
-            // and check if the product is already in product list
-            if (!productsInList[product.getId()]) {
-                try {
-                    // if not clone the current product and add it to products list
-                    products.add((Product) product.clone());
-                } catch (CloneNotSupportedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        Log.d(TAG, "generateProductsList: products: " + products);
-
-        return products;
-    }
-
-    /**
-     * If the distance is less then 1000 method returns distance in meters + unit; else it return
-     * distance in kilometers with unit
-     *
-     * @param distance double; distance attribute returned by backend
-     * @return formattedDistance String; distance with unit added
-     * @since 1.0.0
-     */
-    public static String getFormattedDistance(double distance) {
-
-        // create string object that will be returned later
-        String distanceString;
-
-        // check if rounded distance is greater then 1000
-        if ((int) distance > 1000) {
-
-            // if distance is greater then 1000m convert distance into kilometers
-            double distanceTemp = distance / 1000;
-            double distanceInKm = (double) Math.round(distanceTemp * 100) / 100;
-            distanceString = distanceInKm + "km";
-
-        } else {
-            // if not display distance in meters
-            distanceString = (int) distance + "m";
-        }
-
-        // return distance as a string
-        return distanceString;
     }
 
 }

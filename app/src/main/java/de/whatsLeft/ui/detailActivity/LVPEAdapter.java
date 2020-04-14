@@ -1,4 +1,4 @@
-package de.whatsLeft.ui.stores;
+package de.whatsLeft.ui.detailActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

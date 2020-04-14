@@ -1,4 +1,4 @@
-package de.whatsLeft.ui.stores;
+package de.whatsLeft.ui.detailActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -27,11 +27,12 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import de.whatsLeft.MainActivity;
+import de.whatsLeft.FormatUtils;
 import de.whatsLeft.R;
 import de.whatsLeft.connectivity.TransmitProductStock;
 import de.whatsLeft.store.ProductComparator;
 import de.whatsLeft.store.Store;
+import de.whatsLeft.ui.IndicatorUtils;
 
 /**
  * Activity to show the details including all products and their availability of a store
@@ -107,7 +108,7 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         // display store address
         TextView textViewStoreAddress = findViewById(R.id.text_view_address);
 
-        String addressString = store.getAddress() + ", " + store.getCity() + " - " + MainActivity.getFormattedDistance(store.getDistance());
+        String addressString = store.getAddress() + ", " + store.getCity() + " - " + FormatUtils.getFormattedDistance(store.getDistance());
         textViewStoreAddress.setText(addressString);
 
         // create new IndicatorUtils object

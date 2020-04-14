@@ -1,4 +1,4 @@
-package de.whatsLeft.ui.stores;
+package de.whatsLeft.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -10,8 +10,8 @@ import androidx.annotation.RequiresApi;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import de.whatsLeft.FormatUtils;
 import de.whatsLeft.R;
-import de.whatsLeft.TimeUtils;
 import de.whatsLeft.store.Product;
 import de.whatsLeft.store.Store;
 
@@ -22,7 +22,7 @@ import de.whatsLeft.store.Store;
  * @author Marvin Jütte
  * @version 1.2
  */
-class IndicatorUtils {
+public class IndicatorUtils {
 
     private static final String TAG = "IndicatorUtils";
 
@@ -33,7 +33,7 @@ class IndicatorUtils {
      * @param context Context to access project colors
      * @since 1.0.0
      */
-    IndicatorUtils(Context context) {
+    public IndicatorUtils(Context context) {
         this.context = context;
     }
 
@@ -42,7 +42,7 @@ class IndicatorUtils {
      * @since 1.0.0
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
-    int getIndicatorColor(Product product) {
+    public int getIndicatorColor(Product product) {
         int availability = product.getAvailability();
         if (availability >= 0 && availability < 34) return context.getColor(R.color.holoRedDark);
         else if (availability > 33 && availability < 67)  return context.getColor(R.color.holoOrangeDark);
@@ -54,7 +54,7 @@ class IndicatorUtils {
      * @return indicatorText text from resource string file for text indicator representing availability
      * @since 1.0.0
      */
-    String getIndicatorText(Product product) {
+    public String getIndicatorText(Product product) {
         int availability = product.getAvailability();
         if (availability >= 0 && availability < 34) return context.getString(R.string.empty);
         else if (availability > 33 && availability < 67) return context.getString(R.string.less);
@@ -70,7 +70,7 @@ class IndicatorUtils {
      * @since 1.0.0
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
-    int getStoreOpenTextColor(Store store) {
+    public int getStoreOpenTextColor(Store store) {
         // get current date
         Date date = new Date();
 
@@ -87,7 +87,7 @@ class IndicatorUtils {
             return context.getColor(R.color.holoRedDark);
 
         // if store is shortly before closing return orange color
-        if (TimeUtils.getTimeDifference(date, store.getClosingDate()) <= 1)
+        if (FormatUtils.getTimeDifference(date, store.getClosingDate()) <= 1)
             return context.getColor(R.color.holoOrangeDark);
 
         // else return green color
@@ -102,7 +102,7 @@ class IndicatorUtils {
      * @since 1.0.0
      */
     @SuppressLint("SimpleDateFormat")
-    String getStoreOpenText(Store store) {
+    public String getStoreOpenText(Store store) {
 
         // get current Date
         Date date = new Date();
@@ -129,7 +129,7 @@ class IndicatorUtils {
             // generate empty open text string
             String openText;
 
-            int timeDifference = TimeUtils.getTimeDifference(date, store.getClosingDate());
+            int timeDifference = FormatUtils.getTimeDifference(date, store.getClosingDate());
 
             if (timeDifference <= 1) {
                 // if difference between closing time and current time is less then 1h display closing at <ClosingTime>
