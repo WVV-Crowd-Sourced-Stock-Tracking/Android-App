@@ -111,7 +111,8 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
                 Log.d(TAG, "onSuccess: location: " + location);
                 lastKnownLocation = location;
                 updateCamera();
-                new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter, storesListView, progressUpdate).execute();
+                if (mapReady)
+                    new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter, storesListView, progressUpdate).execute();
             }
         });
     }
