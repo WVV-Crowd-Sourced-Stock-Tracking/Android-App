@@ -151,6 +151,9 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
             @Override
             public boolean onMarkerClick(Marker marker) {
 
+                // display marker title
+                marker.showInfoWindow();
+
                 // get latitude and longitude from maker
                 double latitude = marker.getPosition().latitude;
                 double longitude = marker.getPosition().longitude;
