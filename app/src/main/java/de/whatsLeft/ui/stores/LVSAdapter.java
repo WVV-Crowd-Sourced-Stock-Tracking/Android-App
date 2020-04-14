@@ -15,7 +15,7 @@ import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 
-import de.whatsLeft.MainActivity;
+import de.whatsLeft.FormatUtils;
 import de.whatsLeft.R;
 import de.whatsLeft.store.Product;
 import de.whatsLeft.store.Store;
@@ -110,7 +110,7 @@ public class LVSAdapter extends BaseAdapter {
 
         // display the stores address
         TextView textViewAddress = view.findViewById(R.id.text_view_store_address);
-        String addressDistance = store.getAddress() + ", " + store.getCity() + " - " + MainActivity.getFormattedDistance(store.getDistance());
+        String addressDistance = store.getAddress() + ", " + store.getCity() + " - " + FormatUtils.getFormattedDistance(store.getDistance());
         textViewAddress.setText(addressDistance);
 
         // display if the store is open or not
