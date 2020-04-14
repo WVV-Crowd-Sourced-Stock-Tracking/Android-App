@@ -180,3 +180,4 @@ app/libs/
 image_material/
 .idea/.name
 doc/
+app/debug
