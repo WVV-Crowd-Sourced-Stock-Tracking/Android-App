@@ -29,13 +29,14 @@
     <LinearLayout
         android:id="@+id/progress_bar_with_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingTop="100dp"
+        android:paddingBottom="100dp"
         android:orientation="vertical">
 
         <ProgressBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="150dp"
             android:indeterminate="true"
             android:indeterminateTint="@color/colorPrimary" />
 
