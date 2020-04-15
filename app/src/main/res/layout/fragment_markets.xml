@@ -26,13 +26,26 @@
         android:layout_margin="15dp"
         android:id="@+id/map" />
 
+    <Button
+        android:id="@+id/button_enter_zip_code"
+        android:layout_marginTop="100dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/onboarding_continue_button_background"
+        android:textColor="@color/very_light_gray"
+        android:padding="15dp"
+        android:text="@string/use_zip_code"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:id="@+id/progress_bar_with_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:paddingTop="100dp"
-        android:paddingBottom="100dp"
-        android:orientation="vertical">
+        android:paddingBottom="100dp">
 
         <ProgressBar
             android:layout_width="match_parent"

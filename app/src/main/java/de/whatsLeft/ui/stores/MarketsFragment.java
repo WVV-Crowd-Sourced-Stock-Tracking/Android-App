@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -20,8 +22,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -51,9 +53,9 @@ import de.whatsLeft.store.Store;
  *
  * @since 1.0.0
  * @author Marvin Jütte
- * @version 1.1
+ * @version 1.2
  */
-public class MarketsFragment extends Fragment implements OnMapReadyCallback, LocationListener {
+public class MarketsFragment extends Fragment implements OnMapReadyCallback, LocationListener, ZipCodeDialogFragment.ZipCodeDialogListener {
 
     private static final String TAG = "MarketsFragment";
 
@@ -68,10 +70,15 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
     private ArrayList<Store> stores = new ArrayList<>();
     private LVSAdapter adapter;
 
+    private String zipCode;
+
+    private boolean locationAccess;
     private boolean firstRun = true;
 
     private ListView storesListView;
     private LinearLayout progressUpdate;
+    private Button buttonEnterZipCode;
+
 
     private boolean upToDate = false;
 
@@ -79,28 +86,37 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
         mView = inflater.inflate(R.layout.fragment_markets, container, false);
         listViewStores = mView.findViewById(R.id.store_list_view);
 
-        // check if app has permission to access fine location of user
-        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // if app has not the permission ask the user to grant it
-            ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
-        }
+        // check if location access is granted
+        locationAccess = ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
 
         // setup card view adapter to process all available stores and display them as cards in the list view
         adapter = new LVSAdapter(getContext(), stores);
         listViewStores.setAdapter(adapter);
 
-        // setup location manager to request user moving updates
-        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        assert locationManager != null;
+        buttonEnterZipCode = mView.findViewById(R.id.button_enter_zip_code);
 
-        getLastKnownLocation();
+        // if location permission is granted check if gps is enabled
+        if (locationAccess) {
 
-        Log.d(TAG, "onCreateView: lastKnownLocation: " + lastKnownLocation);
-        Log.i(TAG, "onCreateView: provider: " + locationManager.getBestProvider(new Criteria(), true));
+            // setup location manager to request user moving updates
+            LocationManager locationManager = (LocationManager) Objects.requireNonNull(getContext()).getSystemService(Context.LOCATION_SERVICE);
+            assert locationManager != null;
+
+            // permission is granted now need to check whether gps is enabled
+            locationAccess = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            if (locationAccess) getLastKnownLocation();
+            Log.d(TAG, "onCreateView: lastKnownLocation: " + lastKnownLocation);
+            Log.i(TAG, "onCreateView: provider: " + locationManager.getBestProvider(new Criteria(), true));
+        }
 
         return mView;
     }
 
+    /**
+     * This method sets the lastKnownLocation field to last known location
+     *
+     * @since 1.0.0
+     */
     private void getLastKnownLocation() {
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(Objects.requireNonNull(getContext()));
         fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
@@ -130,6 +146,22 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
             mapView.getMapAsync(this);
         }
 
+        // if app cannot access location ask for zip code
+        if (!locationAccess) {
+
+            progressUpdate.setVisibility(View.GONE);
+            buttonEnterZipCode.setVisibility(View.VISIBLE);
+            buttonEnterZipCode.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new ZipCodeDialogFragment(MarketsFragment.this).show(getParentFragmentManager(), "ZipCodeDialog");
+                }
+            });
+
+            DialogFragment dialog = new ZipCodeDialogFragment(this);
+            dialog.show(getParentFragmentManager(), "ZipCodeDialog");
+        }
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -139,7 +171,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
         // setup google maps view
         mGoogleMap = googleMap;
-        mGoogleMap.setMyLocationEnabled(true);
+        mGoogleMap.setMyLocationEnabled(locationAccess);
         mGoogleMap.setMapStyle(new MapStyleOptions(getResources().getString(R.string.style_json)));
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
         mapReady = true;
@@ -196,13 +228,12 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
                         Toast.makeText(getContext(), getString(R.string.loading_new_stores), Toast.LENGTH_LONG).show();
 
                     // request new stores
-                    if (lastKnownLocation != null)
+                    if (lastKnownLocation != null && locationAccess)
                         new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter, storesListView, progressUpdate).execute();
                     firstRun = false;
                 }
             }
         });
-
         updateCamera();
     }
 
@@ -214,14 +245,14 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
     private void updateCamera() {
 
         // check if lastKnownLocation is null or not
-        if (lastKnownLocation != null) {
+        if (lastKnownLocation != null && locationAccess) {
 
             // set camera position
             LatLng lastKnownLocationLatLgn = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
             CameraPosition position = new CameraPosition(lastKnownLocationLatLgn, 13f, 0f, 0f);
+            if (mapReady) mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
 
             // if map is ready move to camera to new position
-            if (mapReady) mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(position));
         }
     }
 
@@ -253,6 +284,25 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
     @Override
     public void onProviderDisabled(String s) {
         Log.i(TAG, "onProviderDisabled: gps disabled");
+
     }
 
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialogFragment) {
+        EditText editText = Objects.requireNonNull(dialogFragment.getDialog()).findViewById(R.id.edit_text_zip_code);
+        zipCode =  String.valueOf(editText.getText());
+
+        // if progress bar is non visible make it visible
+        if(progressUpdate.getVisibility() == View.GONE) {
+            progressUpdate.setVisibility(View.VISIBLE);
+            buttonEnterZipCode.setVisibility(View.GONE);
+        }
+
+        new RequestStoresAPI(getContext(), mGoogleMap, zipCode, stores, adapter, storesListView, progressUpdate).execute();
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialogFragment) {
+
+    }
 }

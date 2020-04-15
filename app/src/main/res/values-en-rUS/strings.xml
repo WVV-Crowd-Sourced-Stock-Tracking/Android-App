@@ -44,4 +44,9 @@
     <string name="on_boarding_title_4">4. Location</string>
     <string name="on_boarding_message_4">Give us access to your current location to gain best results</string>
     <string name="grant_access_location">Use location</string>
+    <string name="zip_code">zip code</string>
+    <string name="insert_zip_code">Please insert zip code</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="use_zip_code">use zip code</string>
 </resources>

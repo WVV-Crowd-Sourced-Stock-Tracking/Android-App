@@ -44,4 +44,9 @@
     <string name="on_boarding_title_4">4. Standort</string>
     <string name="on_boarding_message_4">Gebe uns Zugriff auf deinen Standort für die besten Ergebnisse.</string>
     <string name="grant_access_location">Standort verwenden</string>
+    <string name="zip_code">Postleitzahl</string>
+    <string name="insert_zip_code">Bitte gebe deine Postleitzahl an</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="ok">Bestätigen</string>
+    <string name="use_zip_code">Postleitzahl nutzen</string>
 </resources>

@@ -30,7 +30,7 @@ import de.whatsLeft.ui.detailActivity.DetailActivity;
  *
  * @since 1.0.0
  * @author Marvin Jütte
- * @version 1.1
+ * @version 1.2
  */
 public class LVSAdapter extends BaseAdapter {
 
@@ -110,7 +110,8 @@ public class LVSAdapter extends BaseAdapter {
 
         // display the stores address
         TextView textViewAddress = view.findViewById(R.id.text_view_store_address);
-        String addressDistance = store.getAddress() + ", " + store.getCity() + " - " + FormatUtils.getFormattedDistance(store.getDistance());
+        String addressDistance = store.getAddress() + ", " + store.getCity();
+        if (store.getDistance() != 0) addressDistance += " - " + FormatUtils.getFormattedDistance(store.getDistance());
         textViewAddress.setText(addressDistance);
 
         // display if the store is open or not
