@@ -27,11 +27,10 @@ import de.whatsLeft.R;
  * Activity for user on boarding
  * <p>Displayed data is manged by IntroViewPagerAdapter</p>
  *
- * @see IntroViewPagerAdapter
- *
- * @since 1.0.0
  * @author Chris de Machaut
- * @version 1.0
+ * @version 1.1
+ * @see IntroViewPagerAdapter
+ * @since 1.0.0
  */
 public class IntroActivity extends AppCompatActivity {
 
@@ -156,7 +155,7 @@ public class IntroActivity extends AppCompatActivity {
 
                 // also we need to save a boolean value to storage so next time when the user runs the app
                 // we would know that he has already checked the intro screen activity
-//                            savePrefsData();
+                savePrefsData();
             }
         });
     }
