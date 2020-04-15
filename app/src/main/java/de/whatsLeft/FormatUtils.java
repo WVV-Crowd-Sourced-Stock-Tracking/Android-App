@@ -1,7 +1,10 @@
 package de.whatsLeft;
 
 import android.location.Location;
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,6 +17,8 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import de.whatsLeft.store.Product;
+import de.whatsLeft.store.ProductComparator;
+import de.whatsLeft.store.Store;
 
 /**
  * Relevant for static methods like processing dates or generating product lists
@@ -199,44 +204,68 @@ public class FormatUtils {
     }
 
     /**
-     * Creates the input json object for constructor based on current location
+     * Generates a product object from the given json object
      *
-     * @param location current location
-     * @return inputJsonObject containing coordinates and search radius
+     * @param jsonStoreObject JsonObject; a json object containing all store information
+     * @return store Store; the store object which attributes are equal to the json object's ones
      * @since 1.0.0
      */
-    public static JSONObject createInputJSONObject(Location location) {
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static Store generateStoreFromJsonObject(JSONObject jsonStoreObject) {
+
+        // create empty store object
+        Store store;
 
         try {
-            JSONObject inputJsonObject = new JSONObject();
+            // get store attributes from json object
+            String id = jsonStoreObject.getString("market_id");
+            String name = jsonStoreObject.getString("market_name");
+            String address = jsonStoreObject.getString("street");
+            String city = jsonStoreObject.getString("city");
+            double distance = jsonStoreObject.get("distance").equals("") ? 0 : jsonStoreObject.getDouble("distance");
+            double latitude = jsonStoreObject.getDouble("latitude");
+            double longitude = jsonStoreObject.getDouble("longitude");
+            JSONArray jsonProductArray = jsonStoreObject.getJSONArray("products");
+            JSONArray jsonPeriodsArray = jsonStoreObject.getJSONArray("periods");
 
-            // store input data in json object
-            inputJsonObject.put("latitude", location.getLatitude());
-            inputJsonObject.put("longitude", location.getLongitude());
-            inputJsonObject.put("radius", 2000);
+            // generate product from current json object in products array list
+            ArrayList<Product> products = FormatUtils.generateProductsList(jsonProductArray);
 
-            // if there are some selected products in filter view add their product ids to a json array
-            if (MainActivity.selectedProducts.size() > 0) {
+            // sort products list
+            products.sort(new ProductComparator());
 
-                // create empty jsonArray which contains the product ids
-                JSONArray productIds = new JSONArray();
+            // look if store opens today
+            int indexOfCurrentPeriod = FormatUtils.findPeriodForCurrentDay(jsonPeriodsArray);
 
-                // for each selected product add it's product id to the json array
-                for (Product product : MainActivity.selectedProducts) {
-                    productIds.put(product.getId());
-                }
+            // if no openingDayId was found the store is closed for this day
+            boolean openingToday = indexOfCurrentPeriod != -1;
 
-                // add selected products to input json object
-                inputJsonObject.put("product_id", productIds);
+            if(openingToday && jsonPeriodsArray.length() > 0) {
 
+                // get period object for current day
+                JSONObject jsonPeriodObject = jsonPeriodsArray.getJSONObject(indexOfCurrentPeriod);
+
+                Date openingDate = FormatUtils.generateDateFromPeriods(jsonPeriodObject, false);
+                Date closingDate = FormatUtils.generateDateFromPeriods(jsonPeriodObject, true);
+
+                // create new Store object
+                store = new Store(id, name, address, city, distance, latitude, longitude, products, true, openingDate, closingDate);
+
+            } else {
+                // create new Store object
+                store = new Store(id, name, address, city, distance, latitude, longitude, products, openingToday);
             }
 
-            return inputJsonObject;
 
+            Log.d(TAG, "generateStoreFromJsonObject: new Store: " + store);
+
+            // create and return new store object and set open to false for now
+            return store;
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        return new JSONObject();
+        // return null if creation was not successful
+        return null;
     }
 }
