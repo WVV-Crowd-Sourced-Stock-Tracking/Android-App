@@ -41,4 +41,7 @@
     <string name="filter_shop">Filter Stores</string>
     <string name="delete_filter">remove filter</string>
     <string name="find_stores">Search Stores</string>
+    <string name="on_boarding_title_4">4. Location</string>
+    <string name="on_boarding_message_4">Give us access to your current location to gain best results</string>
+    <string name="grant_access_location">Use location</string>
 </resources>

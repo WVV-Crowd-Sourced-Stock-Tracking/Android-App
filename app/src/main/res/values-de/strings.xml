@@ -41,4 +41,7 @@
     <string name="filter_shop">Shops filtern</string>
     <string name="delete_filter">Filter löschen</string>
     <string name="find_stores">Supermärkte anzeigen</string>
+    <string name="on_boarding_title_4">4. Standort</string>
+    <string name="on_boarding_message_4">Gebe uns Zugriff auf deinen Standort für die besten Ergebnisse.</string>
+    <string name="grant_access_location">Standort verwenden</string>
 </resources>
