@@ -58,6 +58,7 @@ import de.whatsLeft.store.Store;
 public class MarketsFragment extends Fragment implements OnMapReadyCallback, LocationListener, ZipCodeDialogFragment.ZipCodeDialogListener {
 
     private static final String TAG = "MarketsFragment";
+    private static final int BIGGEST_RADIUS = 10000;
 
     private GoogleMap mGoogleMap;
     private View mView;
@@ -71,6 +72,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
     private LVSAdapter adapter;
 
     private String zipCode;
+    private int searchRadius = 2000;
 
     private boolean locationAccess;
     private boolean firstRun = true;
@@ -126,7 +128,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
                 lastKnownLocation = location;
                 updateCamera();
                 if (mapReady)
-                    new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter, storesListView, progressUpdate).execute();
+                    new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter, storesListView, progressUpdate, searchRadius).execute();
             }
         });
     }
@@ -202,6 +204,8 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
             @Override
             public void onCameraMove() {
                 upToDate = false;
+                float zoom = mGoogleMap.getCameraPosition().zoom;
+                searchRadius = (int) Math.min(120_000/zoom ,BIGGEST_RADIUS);
             }
         });
 
@@ -229,11 +233,15 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
                     // request new stores
                     if (lastKnownLocation != null && locationAccess)
-                        new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter, storesListView, progressUpdate).execute();
+                        new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter, storesListView, progressUpdate, searchRadius).execute();
+                    else if (mapReady && zipCode != null)
+                        new RequestStoresAPI(getContext(), mGoogleMap, zipCode, stores, adapter, storesListView, progressUpdate, searchRadius).execute();
                     firstRun = false;
+                    upToDate = true;
                 }
             }
         });
+
         updateCamera();
     }
 
@@ -264,7 +272,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
 
         // if map is ready request new stores
         if (mapReady && location != null)
-            new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter, listViewStores, progressUpdate).execute();
+            new RequestStoresAPI(getContext(), mGoogleMap, location, stores, adapter, listViewStores, progressUpdate, searchRadius).execute();
 
         updateCamera();
         assert location != null;
@@ -298,7 +306,7 @@ public class MarketsFragment extends Fragment implements OnMapReadyCallback, Loc
             buttonEnterZipCode.setVisibility(View.GONE);
         }
 
-        new RequestStoresAPI(getContext(), mGoogleMap, zipCode, stores, adapter, storesListView, progressUpdate).execute();
+        new RequestStoresAPI(getContext(), mGoogleMap, zipCode, stores, adapter, storesListView, progressUpdate, searchRadius).execute();
     }
 
     @Override

@@ -68,8 +68,8 @@ public class RequestStoresAPI extends APIRequest {
      *
      * @since 1.0.0
      */
-    public RequestStoresAPI(Context context, GoogleMap googleMap, Location location, ArrayList<Store> stores, LVSAdapter adapter, ListView storeListView, LinearLayout progressUpdate) {
-        super("/market/scrape", createInputJSONObject(location).toString());
+    public RequestStoresAPI(Context context, GoogleMap googleMap, Location location, ArrayList<Store> stores, LVSAdapter adapter, ListView storeListView, LinearLayout progressUpdate, int searchRadius) {
+        super("/market/scrape", createInputJSONObject(location, searchRadius).toString());
         this.context = context;
         this.googleMap = googleMap;
         this.stores = stores;
@@ -92,8 +92,8 @@ public class RequestStoresAPI extends APIRequest {
      *
      * @since 1.0.0
      */
-    public RequestStoresAPI(Context context, GoogleMap googleMap, String zipCode, ArrayList<Store> stores, LVSAdapter adapter, ListView storeListView, LinearLayout progressUpdate) {
-        super("/market/scrape", createInputJSONObject(zipCode).toString());
+    public RequestStoresAPI(Context context, GoogleMap googleMap, String zipCode, ArrayList<Store> stores, LVSAdapter adapter, ListView storeListView, LinearLayout progressUpdate, int searchRadius) {
+        super("/market/scrape", createInputJSONObject(zipCode, searchRadius).toString());
         this.context = context;
         this.googleMap = googleMap;
         this.stores = stores;
@@ -228,10 +228,11 @@ public class RequestStoresAPI extends APIRequest {
      * Creates the input json object for constructor based on current location
      *
      * @param location current location
+     * @param searchRadius int max distance in kilometers from you current location
      * @return inputJsonObject containing coordinates and search radius
      * @since 1.0.0
      */
-    private static JSONObject createInputJSONObject(Location location) {
+    private static JSONObject createInputJSONObject(Location location, int searchRadius) {
 
         try {
             JSONObject inputJsonObject = new JSONObject();
@@ -239,7 +240,7 @@ public class RequestStoresAPI extends APIRequest {
             // store input data in json object
             inputJsonObject.put("latitude", location.getLatitude());
             inputJsonObject.put("longitude", location.getLongitude());
-            inputJsonObject.put("radius", 2000);
+            inputJsonObject.put("radius", searchRadius);
 
             // if there are some selected products in filter view add their product ids to a json array
             if (MainActivity.selectedProducts.size() > 0) {
@@ -270,17 +271,18 @@ public class RequestStoresAPI extends APIRequest {
      * Creates the input json object for constructor based on current location
      *
      * @param zipCode String of zip code entered by user
+     * @param searchRadius int max distance in kilometers from zip codes center location
      * @return inputJsonObject containing coordinates and search radius
      * @since 1.0.0
      */
-    private static JSONObject createInputJSONObject(String zipCode) {
+    private static JSONObject createInputJSONObject(String zipCode, int searchRadius) {
 
         try {
             JSONObject inputJsonObject = new JSONObject();
 
             // store input data in json object
             inputJsonObject.put("zip", zipCode);
-            inputJsonObject.put("radius", 2000);
+            inputJsonObject.put("radius", searchRadius);
 
             // if there are some selected products in filter view add their product ids to a json array
             if (MainActivity.selectedProducts.size() > 0) {
