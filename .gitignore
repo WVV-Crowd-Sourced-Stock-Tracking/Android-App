@@ -21,6 +21,9 @@
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
+.idea/runConfigurations.xml
+.idea/misc.xml
+.idea/codeStyles/Project.xml
 
 # Gradle
 .idea/**/gradle.xml
@@ -39,7 +42,6 @@
 # CMake
 cmake-build-*/
 
-# Mongo Explorer plugin
 .idea/**/mongoSettings.xml
 
 # File-based project format
@@ -174,3 +176,8 @@ lint/tmp/
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+app/libs/
+image_material/
+.idea/.name
+doc/
+app/debug

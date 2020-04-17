@@ -1,0 +1,15 @@
+<resources>
+  <string name="style_json" translatable="false">
+  [
+    {
+      \"featureType\": \"poi\",
+      \"elementType\": \"all\",
+      \"stylers\": [
+        {
+          \"visibility\": \"off\"
+        }
+      ]
+    }
+  ]
+  </string>
+</resources>
